@@ -1,0 +1,31 @@
+.filter-section {
+    height: 80vh;
+    width: 10%;
+    margin-left: -8px;
+    padding: 8px;
+    border-right: 5px solid violet;
+    border-bottom: 5px solid violet;
+}
+
+.create-assignment-button {
+    display: block;
+    background-color: white;
+    border: 2px solid #6d0094;
+    border-radius: 100px;
+    padding: 5px 10px 5px 10px;
+    width: fit-content;
+    height: fit-content;
+    text-decoration: none;
+    color: #6d0094;
+    font-size: 20px;
+    align-content: center;
+    text-align: center;
+    align-self: center;
+    margin-left: 20px;
+}
+
+.create-assignment-button:hover {
+    background-color: #6d0094;
+    color: white;
+    transition: 0.5s;
+}

@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headlinks %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/create_assignment.css' %}">
+{% endblock headlinks %}
+
+{% block content %}
+    <form method="post" type="multipart/form-data">
+    {% csrf_token %}
+        {% for field in form %}
+            <strong style="font-size: 30px; position: relative">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></strong>
+            <p>{{ field }}</p>
+        {% endfor %}
+        <button type="submit"></button>
+    </form>
+{% endblock content %}

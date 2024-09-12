@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title | default:'Title not provided' }}</title>
+    {% block headlinks %}
+        <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/base.css' %}">
+    {% endblock headlinks %}
+</head>
+<body>
+{% block mainmenu %}
+    <div class="main-menu">
+        <a href="{% url 'assignment_list' %}" role="button" class="main-menu-button">Assignments</a>
+        <a href="{% url 'assignment_list' %}" role="button" class="main-menu-button login-button">Login</a>
+    </div>
+{% endblock mainmenu %}
+
+{% block content %} {% endblock content %}
+</body>
+</html>

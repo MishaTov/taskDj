@@ -1,0 +1,20 @@
+.field-required-label {
+    color: #ad0000;
+    font-size: 20px;
+    position: absolute;
+    right: -15px;
+}
+
+
+#id_subject {
+    border: 2px solid #6d0094;
+    border-radius: 10px;
+    width: 50%;
+    height: auto;
+    padding: 10px;
+    font-size: 25px;
+}
+
+#id_subject:focus {
+    border: 2px solid #6d0094;
+}

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headlinks %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/assignment_list.css' %}">
+{% endblock headlinks %}
+
+{% block content %}
+    <div style="display: flex">
+        <div class="filter-section">
+            <strong>Filters</strong>
+        </div>
+        <div style="padding: 0 20px 0 20px">
+            <div style="display: inline-flex">
+                <h1>Assignments</h1>
+                <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
+            </div>
+            <p style="font-size: 20px">{% if not assignment_list %} There are no assignments yet. You can create the first one{% endif %}</p>
+        </div>
+    </div>
+{% endblock content %}
