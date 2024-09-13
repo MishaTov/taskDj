@@ -3,8 +3,8 @@
     width: 10%;
     margin-left: -8px;
     padding: 8px;
-    border-right: 5px solid violet;
-    border-bottom: 5px solid violet;
+    border-right: 3px solid rgba(238, 130, 238, 0.4);
+    border-bottom: 3px solid rgba(238, 130, 238, 0.4);
 }
 
 .create-assignment-button {

@@ -1,3 +1,7 @@
+::-webkit-scrollbar {
+    width: 0;
+}
+
 .field-required-label {
     color: #ad0000;
     font-size: 20px;
@@ -5,16 +9,103 @@
     right: -15px;
 }
 
+.task-form {
+    width: 50%;
+    padding: 20px;
+}
+
 
 #id_subject {
-    border: 2px solid #6d0094;
+    border: 2px solid rgba(109, 0, 148, 0.5);
     border-radius: 10px;
-    width: 50%;
+    width: 100%;
     height: auto;
-    padding: 10px;
-    font-size: 25px;
+    padding: 5px;
+    font-size: 20px;
 }
 
 #id_subject:focus {
-    border: 2px solid #6d0094;
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+#id_description {
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    border-radius: 10px;
+    width: 100%;
+    height: 50px;
+    min-height: 50px;
+    max-height: 500px;
+    resize: vertical;
+    padding: 5px;
+    font-size: 20px;
+}
+
+#id_description:focus {
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+#id_deadline {
+    font-size: 15px;
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    height: 25px;
+    border-radius: 10px;
+}
+
+#id_deadline:focus {
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+#id_files::-webkit-file-upload-button {
+    background-color: rgba(242, 214, 255, 0.5);
+    font-size: 15px;
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    height: 25px;
+    border-radius: 5px;
+    width: 100px;
+}
+
+#id_workers_limit {
+    font-size: 15px;
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    height: 25px;
+    border-radius: 10px;
+    width: 100px;
+}
+
+#id_workers_limit:focus {
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+#id_priority {
+    font-size: 15px;
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    height: 25px;
+    border-radius: 10px;
+    width: 100px;
+}
+
+#id_priority:focus {
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+
+#submit-form {
+    width: fit-content;
+    height: fit-content;
+    background-color: rgba(109, 0, 148, 0.7);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 5px 20px 5px 20px;
+    color: white;
 }

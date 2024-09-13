@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.views import View
 
@@ -26,5 +26,9 @@ class CreateAssignment(View):
         context = {'form': form}
         return render(request, 'assignment/create_assignment.html', context=context)
 
-    def post(self, request):
-        return redirect('assignment_list')
+    def post(self, request: HttpRequest):
+        form = AssignmentForm(request.POST)
+        context = {'form': form}
+        print(form.is_valid())
+        print(form.errors)
+        return render(request, 'assignment/create_assignment.html', context=context)
