@@ -9,7 +9,7 @@ def main_page(request):
     return render(request, 'base.html')
 
 
-class Assignment(View):
+class AssignmentView(View):
 
     def get(self, request):
         context = {'assignment_list': ''}
@@ -30,5 +30,6 @@ class CreateAssignment(View):
         form = AssignmentForm(request.POST)
         context = {'form': form}
         print(form.is_valid())
-        print(form.errors)
+        for file in request.FILES.getlist('files'):
+            print(file.size)
         return render(request, 'assignment/create_assignment.html', context=context)

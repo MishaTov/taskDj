@@ -7,12 +7,38 @@
 {% endblock headlinks %}
 
 {% block content %}
-    <form method="post" type="multipart/form-data" class="task-form">
-    {% csrf_token %}
-        {% for field in form %}
-            <span style="font-size: 35px; position: relative">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></span>
-            <p>{{ field }}</p>
-        {% endfor %}
-        <button type="submit" id="submit-form">Create task</button>
-    </form>
+    <div class="form-div">
+        <form method="post" enctype="multipart/form-data" class="task-form">
+        {% csrf_token %}
+{#            {% for field in form %}#}
+{#                <span style="font-size: 35px; position: relative">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></span>#}
+{#                <p>{{ field }}</p>#}
+{#            {% endfor %}#}
+            <span style="font-size: 35px; position: relative">{{ form.subject.label }} <span class="field-required-label">{{ form.subject.help_text }}</span></span>
+            <p>{{ form.subject }}</p>
+            <span style="font-size: 35px; position: relative">{{ form.description.label }} <span class="field-required-label">{{ form.description.help_text }}</span></span>
+            <p>{{ form.description }}</p>
+            <div style="display: flex; justify-content: space-between">
+                <div>
+                    <span style="font-size: 35px; position: relative">{{ form.deadline.label }} <span class="field-required-label">{{ form.deadline.help_text }}</span></span>
+                    <p>{{ form.deadline }}</p>
+                </div>
+                <div>
+                    <span style="font-size: 35px; position: relative">{{ form.files.label }} <span class="field-required-label">{{ form.files.help_text }}</span></span>
+                    <p>{{ form.files }}</p>
+                </div>
+                <div>
+                    <span style="font-size: 35px; position: relative">{{ form.workers_limit.label }} <span class="field-required-label">{{ form.workers_limit.help_text }}</span></span>
+                    <p>{{ form.workers_limit }}</p>
+                </div>
+                <div>
+                    <span style="font-size: 35px; position: relative">{{ form.priority.label }} <span class="field-required-label">{{ form.priority.help_text }}</span></span>
+                    <p>{{ form.priority }}</p>
+                </div>
+            </div>
+            <button type="submit" id="submit-form">Create task</button>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="{% static 'assignment/js/create_assignment.js' %}"></script>
 {% endblock content %}
