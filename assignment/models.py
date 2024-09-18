@@ -1,6 +1,8 @@
 from uuid import uuid4
 
+from django.core.exceptions import ValidationError
 from django.db import models
+from os.path import splitext
 
 
 class Assignment(models.Model):
@@ -14,17 +16,20 @@ class Assignment(models.Model):
         db_table = 'assignments'
         ordering = ['deadline']
 
+    WORKERS_LIMIT_CHOICES = [(_, _) for _ in range(1, 11)]
+    PRIORITY_CHOICES = {'L': 'Low', 'M': 'Medium', 'H': 'High', 'C': 'Critical'}
+
     subject = models.CharField(max_length=75)
     description = models.TextField(max_length=5000, null=True, blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
-    workers_limit = models.IntegerField(default=5)
+    workers_limit = models.IntegerField(choices=WORKERS_LIMIT_CHOICES, default=5)
     current_workers_number = models.IntegerField(default=0)
-    priority = models.CharField(default='low')
+    priority = models.CharField(choices=PRIORITY_CHOICES, default=5)
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(null=True, blank=True)
     status = models.CharField(default=Status.PENDING)
     uuid = models.UUIDField(default=uuid4, unique=True)
-    workers = models.ManyToManyField('User', null=True, blank=True, related_name='assignments')
+    workers = models.ManyToManyField('User', related_name='assignments')
 
     def __str__(self):
         return self.subject
@@ -42,12 +47,17 @@ class User(models.Model):
     current_assignment_number = models.IntegerField(default=0)
 
 
+def get_upload_path(file, filename):
+    filename, ext = splitext(filename)
+    filename = f'{filename}___{file.assignment.uuid}{ext}'
+    return f'assignment/uploads/{file.assignment.uuid}/{filename}'
+
+
 class File(models.Model):
     class Meta:
         db_table = 'files'
 
-    filename = models.CharField()
-    filepath = models.FilePathField()
+    file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
     uuid = models.UUIDField(default=uuid4, unique=True)
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
 
