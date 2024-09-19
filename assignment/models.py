@@ -1,8 +1,7 @@
+from os.path import splitext
 from uuid import uuid4
 
-from django.core.exceptions import ValidationError
 from django.db import models
-from os.path import splitext
 
 
 class Assignment(models.Model):

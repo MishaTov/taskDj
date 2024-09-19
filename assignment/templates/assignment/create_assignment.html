@@ -10,29 +10,22 @@
     <div class="form-div">
         <form method="post" enctype="multipart/form-data" class="task-form">
         {% csrf_token %}
-            <span style="font-size: 35px; position: relative">{{ assignment_form.subject.label }} <span class="field-required-label">{{ assignment_form.subject.help_text }}</span></span>
-            <p>{{ assignment_form.subject }}</p>
-            <span style="font-size: 35px; position: relative">{{ assignment_form.description.label }} <span class="field-required-label">{{ assignment_form.description.help_text }}</span></span>
-            <p>{{ assignment_form.description }}</p>
-            <div style="display: flex; justify-content: space-between">
-                <div>
-                    <span style="font-size: 35px; position: relative">{{ assignment_form.deadline.label }} <span class="field-required-label">{{ assignment_form.deadline.help_text }}</span></span>
-                    <p>{{ assignment_form.deadline }}</p>
-                </div>
-                <div>
-                    <span style="font-size: 35px; position: relative">{{ file_form.file.label }} <span class="field-required-label">{{ file_form.file.help_text }}</span></span>
-                    <p>{{ file_form.file }}</p>
-                    <span>{{ file_form.errors.popitem.1.0 }}</span>
-                </div>
-                <div>
-                    <span style="font-size: 35px; position: relative">{{ assignment_form.workers_limit.label }} <span class="field-required-label">{{ assignment_form.workers_limit.help_text }}</span></span>
-                    <p>{{ assignment_form.workers_limit }}</p>
-                </div>
-                <div>
-                    <span style="font-size: 35px; position: relative">{{ assignment_form.priority.label }} <span class="field-required-label">{{ assignment_form.priority.help_text }}</span></span>
-                    <p>{{ assignment_form.priority }}</p>
-                </div>
+        {% for field in assignment_form %}
+            <span class="form-field-label">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></span>
+            <div style="margin-bottom: 25px">
+                {{ field }}
+                {% if field.errors %}
+                    <p class="field-error-msg">{{ field.errors.0 }}</p>
+                {% endif %}
             </div>
+        {% endfor %}
+        <span class="form-field-label">{{ file_form.file.label }}</span>
+        <div>
+            <p>{{ file_form.file }}</p>
+            {% if file_form.file.errors %}
+                <p class="field-error-msg">{{ file_form.file.errors.0 }}</p>
+            {% endif %}
+        </div>
             <button type="submit" id="submit-form">Create task</button>
         </form>
     </div>

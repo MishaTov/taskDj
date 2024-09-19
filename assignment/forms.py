@@ -3,7 +3,8 @@ from datetime import timedelta
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
-from .models import Assignment, File
+
+from .models import Assignment
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -24,28 +25,51 @@ class MultipleFileField(forms.FileField):
         return result
 
 
-# class AssignmentForm(forms.Form):
-#     date_widget = {'type': 'datetime-local',
-#                    'min': now().strftime('%Y-%m-%dT%H:%M'),
-#                    'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
-#                    'class': 'form-field'}
-#     worker_limit_choice = [(_, _) for _ in range(1, 11)]
-#
-#     subject = forms.CharField(max_length=75, help_text='*', widget=forms.TextInput(attrs={'class': 'form-field'}))
-#     description = forms.CharField(max_length=5000, widget=forms.Textarea(attrs={'class': 'form-field'}), required=False)
-#     deadline = forms.DateTimeField(widget=forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget), required=False)
-#     files = MultipleFileField(required=False)
-#     workers_limit = forms.ChoiceField(choices=worker_limit_choice, initial=5, widget=forms.Select(attrs={'class': 'form-field'}), required=False)
-#     priority = forms.ChoiceField(choices=((1, 'low'),
-#                                           (2, 'medium'),
-#                                           (3, 'high'),
-#                                           (4, 'critical')), widget=forms.Select(attrs={'class': 'form-field'}), required=False)
-
-
 class AssignmentForm(forms.ModelForm):
     class Meta:
+        date_widget = {'type': 'datetime-local',
+                       'min': now().strftime('%Y-%m-%dT%H:%M'),
+                       'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
+                       'class': 'form-field'}
+
         model = Assignment
         fields = ['subject', 'description', 'deadline', 'workers_limit', 'priority']
+        widgets = {
+            'subject': forms.TextInput(attrs={'class': 'form-field'}),
+            'description': forms.Textarea(attrs={'class': 'form-field'}),
+            'deadline': forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget),
+            'workers_limit': forms.Select(attrs={'class': 'form-field'}),
+            'priority': forms.Select(attrs={'class': 'form-field'})
+        }
+        help_texts = {
+            'subject': '*'
+        }
+        error_messages = {
+            'subject': {
+                'required': 'This field must be filled',
+                'max_length': 'This field cannot be longer than 75 characters'
+            },
+            'description': {
+                'max_length': 'This field cannot be longer than 5000 characters'
+            },
+            'deadline': {
+                'min': 'You cannot set a deadline in the past',
+                'max': 'You cannot set a deadline further than 5 years from now'
+            },
+            'workers_limit': {
+                'invalid_choice': 'You must provide a value from 1 to 10 inclusive'
+            },
+            'priority': {
+                'invalid_choice': 'You must provide one of the next variants: Low, Medium, High, Critical'
+            }
+        }
+
+    def clean(self):
+        super().clean()
+
+        for field_name in self.errors:
+            err_field = self.fields.get(field_name)
+            err_field.widget.attrs['class'] = err_field.widget.attrs['class'] + ' invalid'
 
 
 class FileForm(forms.Form):

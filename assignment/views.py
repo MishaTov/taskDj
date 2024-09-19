@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.views import View
@@ -33,10 +34,11 @@ class CreateAssignment(View):
         assignment_form = AssignmentForm(request.POST)
         file_form = FileForm(request.POST, request.FILES)
         if assignment_form.is_valid() and file_form.is_valid():
-            assignment = assignment_form.save(commit=False)
-            File.objects.bulk_create([
-                File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
-            ])
+            with transaction.atomic():
+                assignment = assignment_form.save()
+                File.objects.bulk_create([
+                    File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
+                ])
         else:
             context = {'assignment_form': assignment_form,
                        'file_form': file_form}
