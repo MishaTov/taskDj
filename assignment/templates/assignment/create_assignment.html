@@ -9,6 +9,7 @@
 {% block content %}
     <div class="form-div">
         <form method="post" enctype="multipart/form-data" class="task-form">
+        <span class="required-field-msg">Required fields are marked <span style="color: #ad0000">*</span></span>
         {% csrf_token %}
         {% for field in assignment_form %}
             <span class="form-field-label">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></span>

@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from .forms import AssignmentForm, FileForm
-from .models import File
+from .models import File, Assignment
 
 
 def main_page(request):
@@ -44,3 +44,6 @@ class CreateAssignment(View):
                        'file_form': file_form}
             return render(request, 'assignment/create_assignment.html', context=context)
         return redirect('assignment_list')
+
+
+
