@@ -2,6 +2,7 @@ from django.db import transaction
 from django.http import HttpResponse, HttpRequest
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.generic import ListView, DetailView, FormView
 
 from .forms import AssignmentForm, FileForm
 from .models import File, Assignment
@@ -11,14 +12,24 @@ def main_page(request):
     return render(request, 'base.html')
 
 
-class AssignmentView(View):
+class AssignmentView(ListView):
+    template_name = 'assignment/assignment_list.html'
+    model = Assignment
+    context_object_name = 'assignments'
+    paginate_by = 5
 
-    def get(self, request):
-        context = {'assignment_list': ''}
-        return render(request, 'assignment/assignment_list.html', context=context)
 
-    def post(self, request):
-        return HttpResponse('post method')
+class AssignmentInfo(DetailView):
+    template_name = 'assignment/assignment_info.html'
+    model = Assignment
+    context_object_name = 'assignment'
+    slug_url_kwarg = 'assignment_uuid'
+    slug_field = 'uuid'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = context['assignment'].subject
+        return context
 
 
 class CreateAssignment(View):
@@ -44,6 +55,3 @@ class CreateAssignment(View):
                        'file_form': file_form}
             return render(request, 'assignment/create_assignment.html', context=context)
         return redirect('assignment_list')
-
-
-

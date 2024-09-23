@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headlinks %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/assignment_info.css' %}">
+{% endblock headlinks %}
+
+{% block content %}
+    {{ assignment.subject }}
+    {{ assignment.description }}
+    {{ assignment.deadline }}
+    {{ assignment.priority }}
+{% endblock content %}

@@ -13,7 +13,8 @@ class Assignment(models.Model):
 
     class Meta:
         db_table = 'assignments'
-        ordering = ['deadline']
+        ordering = ['-created_at']
+        # ordering = ['deadline']
 
     WORKERS_LIMIT_CHOICES = [(_, _) for _ in range(1, 11)]
     PRIORITY_CHOICES = {'L': 'Low', 'M': 'Medium', 'H': 'High', 'C': 'Critical'}
