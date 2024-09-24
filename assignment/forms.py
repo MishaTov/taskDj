@@ -28,7 +28,7 @@ class MultipleFileField(forms.FileField):
 class AssignmentForm(forms.ModelForm):
     class Meta:
         date_widget = {'type': 'datetime-local',
-                       'min': now().strftime('%Y-%m-%dT%H:%M'),
+                       'min': (now() + timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M'),
                        'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
                        'class': 'form-field'}
 

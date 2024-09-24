@@ -18,6 +18,16 @@ class AssignmentView(ListView):
     context_object_name = 'assignments'
     paginate_by = 5
 
+    def get(self, request, *args, **kwargs):
+        if not request.GET.get('page'):
+            return redirect(f'{request.path}?page=1')
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(object_list=object_list, **kwargs)
+        context['color_labels'] = Assignment.Status.COLOR_LABELS
+        return context
+
 
 class AssignmentInfo(DetailView):
     template_name = 'assignment/assignment_info.html'

@@ -10,6 +10,12 @@ class Assignment(models.Model):
         PROGRESS = 'In progress'
         DONE = 'Done'
         FAILED = 'Missed the deadline'
+        COLOR_LABELS = {
+            PENDING: '#9900a5',
+            PROGRESS: '#ffa200',
+            DONE: '#17bf00',
+            FAILED: '#ff0000'
+        }
 
     class Meta:
         db_table = 'assignments'
@@ -17,14 +23,17 @@ class Assignment(models.Model):
         # ordering = ['deadline']
 
     WORKERS_LIMIT_CHOICES = [(_, _) for _ in range(1, 11)]
-    PRIORITY_CHOICES = {'L': 'Low', 'M': 'Medium', 'H': 'High', 'C': 'Critical'}
+    PRIORITY_CHOICES = {'L': 'Low',
+                        'M': 'Medium',
+                        'H': 'High',
+                        'C': 'Critical'}
 
     subject = models.CharField(max_length=75)
     description = models.TextField(max_length=5000, null=True, blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
     workers_limit = models.IntegerField(choices=WORKERS_LIMIT_CHOICES, default=5)
     current_workers_number = models.IntegerField(default=0)
-    priority = models.CharField(choices=PRIORITY_CHOICES, default=5)
+    priority = models.CharField(choices=PRIORITY_CHOICES, default='L')
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.CharField(null=True, blank=True)
     status = models.CharField(default=Status.PENDING)

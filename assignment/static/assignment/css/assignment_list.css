@@ -32,16 +32,21 @@
 }
 
 .assignment {
+    position: relative;
     text-decoration: none;
     color: black;
     display: block;
     border: 2px solid #6d0094;
     box-sizing: border-box;
     width: 80%;
-    height: 130px;
+    min-width: 500px;
+    height: 16%;
+    min-height: 100px;
     margin-top: 10px;
     border-radius: 15px 15px 50px 15px;
     padding: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .assignment:hover {
@@ -53,7 +58,7 @@
 .paginator {
     margin-top: 20px;
     display: flex;
-    justify-content: center
+    justify-content: center;
 }
 
 .page {

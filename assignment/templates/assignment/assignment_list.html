@@ -8,32 +8,41 @@
 {% endblock headlinks %}
 
 {% block content %}
-    <div style="display: flex">
-        <div class="filter-section">
-            <strong>Filters</strong>
-        </div>
-        <div style="padding: 0 20px 0 20px; width: 80%">
-            <div style="display: inline-flex">
-                <h1>Assignments</h1>
-                <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
+    <div>
+        <div style="display: flex; height: 100%">
+            <div class="filter-section">
+                <strong>Filters</strong>
             </div>
-            <p style="font-size: 20px">{% if not assignments %} There are no assignments yet. You can create the first one{% endif %}</p>
-            {% for assignment in assignments %}
-                <a class="assignment" href="{% url 'assignment_info' assignment.uuid %}">
-                    {{ assignment.subject }}
-                </a>
-            {% endfor %}
+            <div style="padding: 0 20px 0 20px; width: 80%">
+                <div style="display: inline-flex">
+                    <h1>Assignments</h1>
+                    <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
+                </div>
+                <p style="font-size: 20px">{% if not assignments %} There are no assignments yet. You can create the first one{% endif %}</p>
+                {% for assignment in assignments %}
+                    <a class="assignment" href="{% url 'assignment_info' assignment.uuid %}">
+                        <strong style="font-size: 25px">{{ assignment.subject }}</strong>
+                        <span style="position: absolute; top: 5px; right: 5px"><span style="color: {{ color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }} (Priority: {{ assignment.get_priority_display }}) </span>
+                        {% if assignment.deadline %}
+                            <p style="font-size: 18px; margin: 10px 0 10px 0"><strong>Due to: </strong><span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o,  G:i' }}</span></p>
+                            <p style="font-size: 18px; margin: 10px 0 -15px 0"><strong>Time remaining: </strong><span class="time-left"></span></p>
+                        {% endif %}
+                    </a>
+                {% endfor %}
+            </div>
         </div>
     </div>
-    <div class="paginator">
-        {% for page_number in paginator.page_range %}
-            {% if request.GET.page|to_int  == page_number|to_int %}
-                <span class="page current">{{ page_number }} </span>
-            {% elif not request.GET.page %}
-                <span class="page current">{{ page_number }} </span>
-            {% else %}
-                <a class="page" href="?page={{ page_number }}">{{ page_number }} </a>
-            {% endif %}
-        {% endfor %}
-    </div>
+        {% if paginator.num_pages > 1 %}
+            <div class="paginator">
+                {% for page_number in paginator.page_range %}
+                    {% if request.GET.page|int_  == page_number %}
+                        <span class="page current">{{ page_number }} </span>
+                    {% else %}
+                        <a class="page" href="?page={{ page_number }}">{{ page_number }} </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>
 {% endblock content %}
