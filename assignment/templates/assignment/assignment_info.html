@@ -10,15 +10,22 @@
 {% block content %}
     <div class="subject">{{ assignment.subject }}</div>
     <div style="display: flex">
-        <div class="extra-info">
-            <p class="p-extra"><span style="color: {{ status_color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }}</p><br><br>
-            <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
-            <p class="p-extra"><strong>Due to:</strong> <span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o, G:i' }}</span></p>
-            <p class="p-extra"><strong>Time remaining:</strong> <span class="time-left"></span></p>
-            <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }} <strong>by</strong> <a href="#">ewprghrehgorheoghorewghorhewgohrewogihreighrhgoirhewgh</a></p>
-            <br>
-            <button type="button" class="action-button accept">Accept task</button>
-            <button type="button" class="action-button reject">Reject task</button>
+        <div>
+            <div class="extra-info">
+                <p class="p-extra"><span style="color: {{ status_color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }}</p><br><br>
+                <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
+                <p class="p-extra"><strong>Due to:</strong> <span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o, G:i' }}</span></p>
+                <p class="p-extra"><strong>Time remaining:</strong> <span class="time-left"></span></p>
+                <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }} <strong>by</strong> <a href="#">ewprghrehgorheoghorewghorhewgohrewogihreighrhgoirhewgh</a></p>
+                <br>
+                <button type="button" class="action-button accept">Accept task</button>
+                <button type="button" class="action-button reject">Reject task</button>
+            </div>
+            <div class="extra-info">
+                {% for file in assignment.file_set.all %}
+                    <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}"><span style="overflow: hidden; text-overflow: ellipsis">{{ file.file|get_filename }}</span></a>
+                {% endfor %}
+            </div>
         </div>
         <div class="general-info">
             {% if not assignment.description %} <h3>This task has no description</h3> {% endif %}

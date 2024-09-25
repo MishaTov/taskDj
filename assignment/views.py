@@ -1,6 +1,6 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpRequest, FileResponse
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.views.generic import ListView, DetailView, FormView
 
@@ -43,6 +43,12 @@ class AssignmentInfo(DetailView):
         context['status_color_labels'] = Assignment.Status.COLOR_LABELS
         context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
         return context
+
+    @staticmethod
+    def download(request, assignment_uuid, file_uuid):
+        file = get_object_or_404(File, uuid=file_uuid)
+        response = FileResponse(file.file, 'rb', as_attachment=True)
+        return response
 
 
 class CreateAssignment(View):

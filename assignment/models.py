@@ -63,7 +63,7 @@ class User(models.Model):
 
 def get_upload_path(file, filename):
     filename, ext = splitext(filename)
-    filename = f'{filename}___{file.assignment.uuid}{ext}'
+    filename = f'{filename}___{file.uuid}{ext}'
     return f'assignment/uploads/{file.assignment.uuid}/{filename}'
 
 
@@ -71,8 +71,8 @@ class File(models.Model):
     class Meta:
         db_table = 'files'
 
-    file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
     uuid = models.UUIDField(default=uuid4, unique=True)
+    file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
 
 
