@@ -22,7 +22,8 @@
                 {% for assignment in assignments %}
                     <a class="assignment" href="{% url 'assignment_info' assignment.uuid %}">
                         <strong style="font-size: 25px">{{ assignment.subject }}</strong>
-                        <span style="position: absolute; top: 5px; right: 5px"><span style="color: {{ color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }} (Priority: {{ assignment.get_priority_display }}) </span>
+                        <span style="position: absolute; top: 5px; right: 5px"><span style="color: {{ status_color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }}
+                            (Priority: <strong><span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong>)</span>
                         {% if assignment.deadline %}
                             <p style="font-size: 18px; margin: 10px 0 10px 0"><strong>Due to: </strong><span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o,  G:i' }}</span></p>
                             <p style="font-size: 18px; margin: 10px 0 -15px 0"><strong>Time remaining: </strong><span class="time-left"></span></p>
@@ -34,13 +35,65 @@
     </div>
         {% if paginator.num_pages > 1 %}
             <div class="paginator">
-                {% for page_number in paginator.page_range %}
-                    {% if request.GET.page|int_  == page_number %}
-                        <span class="page current">{{ page_number }} </span>
-                    {% else %}
-                        <a class="page" href="?page={{ page_number }}">{{ page_number }} </a>
+{#                {% if page_obj.has_previous %}#}
+{#                    <a class="page-pointer" href="?page={{ page_obj.number|add:-1 }}">←</a>#}
+{#                {% endif %}#}
+                <div style="display: flex; width: fit-content; justify-content: center">
+                {% if paginator.num_pages < 5 %}
+                    {% for page_number in paginator.page_range %}
+                        {% if request.GET.page|int_  == page_number %}
+                            <a class="page current">{{ page_number }}</a>
+                        {% else %}
+                            <a class="page" href="?page={{ page_number}}">{{ page_number}} </a>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    {% if page_obj.number == 1 %}
+                        <a class="page current">1</a>
+                        <a class="page" href="?page=2">2</a>
+                        <a class="page" href="?page=3">3</a>
+                        <a class="page" href="?page=4">4</a>
+                        <strong style="display: flex; align-self: center">...</strong>
+                        <a class="page" href="?page={{ paginator.num_pages}}">{{ paginator.num_pages}}</a>
+                    {% elif page_obj.number == 2 %}
+                        <a class="page" href="?page=1">1</a>
+                        <a class="page current">2</a>
+                        <a class="page" href="?page=3">3</a>
+                        <a class="page" href="?page=4">4</a>
+                        <strong style="display: flex; align-self: center">...</strong>
+                        <a class="page" href="?page={{ paginator.num_pages}}">{{ paginator.num_pages}}</a>
+                    {% elif page_obj.number == paginator.num_pages|add:-1 %}
+                        <a class="page" href="?page=1">1</a>
+                        <strong style="display: flex; align-self: center">...</strong>
+                        <a class="page" href="?page={{ paginator.num_pages|add:-3 }}">{{ paginator.num_pages|add:-3 }}</a>
+                        <a class="page" href="?page={{ paginator.num_pages|add:-2 }}">{{ paginator.num_pages|add:-2 }}</a>
+                        <a class="page current">{{ paginator.num_pages|add:-1 }}</a>
+                        <a class="page" href="?page={{ paginator.num_pages}}">{{ paginator.num_pages}}</a>
+                    {% elif page_obj.number == paginator.num_pages %}
+                        <a class="page" href="?page=1">1</a>
+                        <strong style="display: flex; align-self: center">...</strong>
+                        <a class="page" href="?page={{ paginator.num_pages|add:-3 }}">{{ paginator.num_pages|add:-3 }}</a>
+                        <a class="page" href="?page={{ paginator.num_pages|add:-2 }}">{{ paginator.num_pages|add:-2 }}</a>
+                        <a class="page" href="?page={{ paginator.num_pages|add:-1 }}">{{ paginator.num_pages|add:-1 }}</a>
+                        <a class="page current">{{ paginator.num_pages}}</a>
+                    {% elif 3 <= page_obj.number and page_obj.number <= paginator.num_pages|add:-2 %}
+                        <a class="page" href="?page=1">1</a>
+                        {% if page_obj.number > 3 %}
+                            <strong style="display: flex; align-self: center">...</strong>
+                        {% endif %}
+                        <a class="page" href="?page={{ page_obj.number|add:-1 }}">{{ page_obj.number|add:-1 }}</a>
+                        <a class="page current">{{ page_obj.number }}</a>
+                        <a class="page" href="?page={{ page_obj.number|add:1 }}">{{ page_obj.number|add:1 }}</a>
+                        {% if page_obj.number < paginator.num_pages|add:-2%}
+                            <strong style="display: flex; align-self: center">...</strong>
+                        {% endif %}
+                        <a class="page" href="?page={{ paginator.num_pages}}">{{ paginator.num_pages}}</a>
                     {% endif %}
-                {% endfor %}
+                {% endif %}
+                </div>
+{#                {% if page_obj.has_next %}#}
+{#                    <a class="page-pointer" href="?page={{ page_obj.number|add:1 }}">→</a>#}
+{#                {% endif %}#}
             </div>
         {% endif %}
 

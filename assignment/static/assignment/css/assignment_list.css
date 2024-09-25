@@ -1,5 +1,5 @@
 .filter-section {
-    height: 80vh;
+    height: 83vh;
     width: 10%;
     min-width: 150px;
     margin-left: -8px;
@@ -40,11 +40,11 @@
     box-sizing: border-box;
     width: 80%;
     min-width: 500px;
-    height: 16%;
-    min-height: 100px;
+    height: 128px;
     margin-top: 10px;
     border-radius: 15px 15px 50px 15px;
-    padding: 20px;
+    padding: 25px 20px 20px 20px;
+    text-wrap: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -59,6 +59,7 @@
     margin-top: 20px;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 .page {
@@ -81,3 +82,15 @@
 .page.current {
     background-color: rgba(248,175,255,0.54);
 }
+
+/*.page-pointer {*/
+/*    display: flex;*/
+/*    align-items: center;*/
+/*    justify-content: center;*/
+/*    text-decoration: none;*/
+/*    font-weight: bold;*/
+/*    font-size: 30px;*/
+/*    color: #6d0094;*/
+/*    height: fit-content;*/
+/*    width: fit-content;*/
+/*}*/

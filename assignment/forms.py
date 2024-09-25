@@ -28,7 +28,7 @@ class MultipleFileField(forms.FileField):
 class AssignmentForm(forms.ModelForm):
     class Meta:
         date_widget = {'type': 'datetime-local',
-                       'min': (now() + timedelta(minutes=1)).strftime('%Y-%m-%dT%H:%M'),
+                       'min': (now() + timedelta()).strftime('%Y-%m-%dT%H:%M'),
                        'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
                        'class': 'form-field'}
 
@@ -52,10 +52,6 @@ class AssignmentForm(forms.ModelForm):
             'description': {
                 'max_length': 'This field cannot be longer than 5000 characters'
             },
-            'deadline': {
-                'min': 'You cannot set a deadline in the past',
-                'max': 'You cannot set a deadline further than 5 years from now'
-            },
             'workers_limit': {
                 'invalid_choice': 'You must provide a value from 1 to 10 inclusive'
             },
@@ -70,6 +66,15 @@ class AssignmentForm(forms.ModelForm):
         for field_name in self.errors:
             err_field = self.fields.get(field_name)
             err_field.widget.attrs['class'] = err_field.widget.attrs['class'] + ' invalid'
+
+    def clean_deadline(self):
+        deadline = self.cleaned_data.get('deadline')
+        if deadline:
+            if deadline <= now():
+                raise ValidationError('You cannot set a deadline in the past')
+            if deadline >= now() + timedelta(days=5*365):
+                raise ValidationError('You cannot set a deadline further than 5 years from now')
+            return deadline
 
 
 class FileForm(forms.Form):

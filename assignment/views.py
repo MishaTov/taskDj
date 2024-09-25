@@ -25,7 +25,8 @@ class AssignmentView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context['color_labels'] = Assignment.Status.COLOR_LABELS
+        context['status_color_labels'] = Assignment.Status.COLOR_LABELS
+        context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
         return context
 
 
@@ -39,6 +40,8 @@ class AssignmentInfo(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context['assignment'].subject
+        context['status_color_labels'] = Assignment.Status.COLOR_LABELS
+        context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
         return context
 
 

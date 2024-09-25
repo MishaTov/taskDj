@@ -28,6 +28,11 @@ class Assignment(models.Model):
                         'H': 'High',
                         'C': 'Critical'}
 
+    PRIORITY_COLOR_LABELS = {'L': '#28b463',
+                             'M': '#d4ac0d',
+                             'H': '#a93226',
+                             'C': '#7d3c98'}
+
     subject = models.CharField(max_length=75)
     description = models.TextField(max_length=5000, null=True, blank=True)
     deadline = models.DateTimeField(null=True, blank=True)
