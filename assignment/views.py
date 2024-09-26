@@ -21,12 +21,20 @@ class AssignmentView(ListView):
     def get(self, request, *args, **kwargs):
         if not request.GET.get('page'):
             return redirect(f'{request.path}?page=1')
+        paginate_by = request.GET.get('paginate_by')
+        if paginate_by in {'5', '10', '20', '50'}:
+            self.paginate_by = int(paginate_by)
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(object_list=object_list, **kwargs)
+        context = super().get_context_data(**kwargs)
         context['status_color_labels'] = Assignment.Status.COLOR_LABELS
         context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
+        if not context.get('paginate_by'):
+            context['paginate_by'] = self.paginate_by
+        paginator = context.get('paginator')
+        number = context.get('page_obj').number
+        context['pages'] = paginator.get_elided_page_range(number=number, on_each_side=1, on_ends=1)
         return context
 
 

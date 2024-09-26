@@ -83,14 +83,14 @@
     background-color: rgba(248,175,255,0.54);
 }
 
-/*.page-pointer {*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*    text-decoration: none;*/
-/*    font-weight: bold;*/
-/*    font-size: 30px;*/
-/*    color: #6d0094;*/
-/*    height: fit-content;*/
-/*    width: fit-content;*/
-/*}*/
+.page-pointer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 30px;
+    color: #6d0094;
+    height: fit-content;
+    width: fit-content;
+}
