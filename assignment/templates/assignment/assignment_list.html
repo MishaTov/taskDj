@@ -17,15 +17,16 @@
                 <div style="display: inline-flex">
                     <h1>Assignments</h1>
                     <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
-                    <form action="{{ request.path }}" method="get" style="font-size: 20px; height: fit-content; align-self: center" id="paginate-form">
-                        <label for="paginate_by">&nbsp;&nbsp;&nbsp;Assignments per page: </label>
-                        <select name="paginate_by" style="">
-                            <option value="5" {% if paginate_by == 5 %}selected{% endif %}>5</option>
-                            <option value="10" {% if paginate_by == 10 %}selected{% endif %}>10</option>
-                            <option value="20" {% if paginate_by == 20 %}selected{% endif %}>20</option>
-                            <option value="50" {% if paginate_by == 50 %}selected{% endif %}>50</option>
-                        </select>
-                    </form>
+                    <span style="font-size: 20px; align-self: center">&nbsp;&nbsp;&nbsp;Assignments per page: &nbsp;</span>
+                    <div class="paginate-by-element">
+                      <button class="paginate-button">{{ paginate_by }}</button>
+                        <div class="dropdown-paginate-by">
+                          <span>5</span>
+                          <span>10</span>
+                          <span>20</span>
+                          <span>50</span>
+                        </div>
+                    </div>
                 </div>
                 <p style="font-size: 20px">{% if not assignments %} There are no assignments yet. You can create the first one{% endif %}</p>
                 {% for assignment in assignments %}
@@ -45,21 +46,21 @@
         {% if paginator.num_pages > 1 %}
             <div class="paginator">
                 {% if page_obj.has_previous %}
-                    <a class="page-pointer" href="?page={{ page_obj.previous_page_number }}">←</a>
+                    <a class="page-pointer" href="?page={{ page_obj.previous_page_number }}{{ filters }}">←</a>
                 {% endif %}
                 {% for page_number in pages %}
                     {% if page_number != paginator.ELLIPSIS %}
                          {% if page_number == page_obj.number %}
                              <span class="page current">{{ page_number }}</span>
                          {% else %}
-                             <a class="page" href="?page={{ page_number }}">{{ page_number }}</a>
+                             <a class="page" href="?page={{ page_number }}{{ filters }}">{{ page_number }}</a>
                          {% endif %}
                     {% else %}
                         <strong>{{ paginator.ELLIPSIS }}</strong>
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <a class="page-pointer" href="?page={{ page_obj.next_page_number }}">→</a>
+                    <a class="page-pointer" href="?page={{ page_obj.next_page_number }}{{ filters }}">→</a>
                 {% endif %}
             </div>
         {% endif %}

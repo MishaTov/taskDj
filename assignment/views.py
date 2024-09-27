@@ -1,8 +1,8 @@
 from django.db import transaction
-from django.http import HttpResponse, HttpRequest, FileResponse
+from django.http import HttpRequest, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
-from django.views.generic import ListView, DetailView, FormView
+from django.views.generic import ListView, DetailView
 
 from .forms import AssignmentForm, FileForm
 from .models import File, Assignment
@@ -18,12 +18,14 @@ class AssignmentView(ListView):
     context_object_name = 'assignments'
     paginate_by = 5
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: HttpRequest, *args, **kwargs):
+        request.GET = request.GET.copy()
         if not request.GET.get('page'):
-            return redirect(f'{request.path}?page=1')
-        paginate_by = request.GET.get('paginate_by')
-        if paginate_by in {'5', '10', '20', '50'}:
+            request.GET['page'] = 1
+        paginate_by = request.GET.get('paginate_by', self.paginate_by)
+        if paginate_by != str(self.paginate_by) and paginate_by in {'5', '10', '20', '50'}:
             self.paginate_by = int(paginate_by)
+        request.GET['paginate_by'] = self.paginate_by
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -35,6 +37,11 @@ class AssignmentView(ListView):
         paginator = context.get('paginator')
         number = context.get('page_obj').number
         context['pages'] = paginator.get_elided_page_range(number=number, on_each_side=1, on_ends=1)
+        filters = ''
+        for param, value in self.request.GET.items():
+            if param != 'page':
+                filters += '&' + param + '=' + str(value)
+        context['filters'] = filters
         return context
 
 

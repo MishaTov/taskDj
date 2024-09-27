@@ -75,12 +75,12 @@
 }
 
 .page:hover {
-    background-color: rgba(248,175,255,0.54);
+    background-color: rgba(248, 175, 255, 0.54);
     transition: 0.5s;
 }
 
 .page.current {
-    background-color: rgba(248,175,255,0.54);
+    background-color: rgba(248, 175, 255, 0.54);
 }
 
 .page-pointer {
@@ -93,4 +93,81 @@
     color: #6d0094;
     height: fit-content;
     width: fit-content;
+}
+
+/*.paginate-by-element {*/
+/*    display: flex;*/
+/*    border: 1px solid #6d0094;*/
+/*    border-radius: 5px;*/
+/*    color: #6d0094;*/
+/*    width: 50px;*/
+/*    height: fit-content;*/
+/*    align-self: center;*/
+/*    justify-content: center;*/
+/*    position: relative;*/
+/*}*/
+
+/*.dropdown-paginate-by-list {*/
+/*    background-color: white;*/
+/*    border: 1px solid #6d0094;*/
+/*    border-radius: 5px;*/
+/*    position: absolute;*/
+/*    width: inherit;*/
+/*}*/
+
+/*.dropdown-paginate-by-list a {*/
+/*    text-decoration: none;*/
+/*    display: flex;*/
+/*    justify-content: center;*/
+/*    color: #6d0094;*/
+/*}*/
+
+/*.dropdown-paginate-by-list a:hover {*/
+/*    color: white;*/
+/*    background-color: #6d0094;*/
+/*}*/
+
+.paginate-by-element {
+    position: relative;
+    display: inline-block;
+    align-self: center;
+}
+
+.paginate-button {
+    border: 1px solid #6d0094;
+    border-radius: 5px;
+    background-color: inherit;
+    color: #6d0094;
+    width: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0;
+}
+
+.dropdown-paginate-by {
+    display: none;
+    border: 1px solid #6d0094;
+    border-radius: 5px;
+    position: absolute;
+    background-color: white;
+    width: 50px;
+    height: fit-content;
+    z-index: 100;
+}
+
+.dropdown-paginate-by span {
+    color: #6d0094;
+    display: block;
+    text-align: center;
+}
+
+.dropdown-paginate-by span:hover {
+    cursor: pointer;
+    background-color: #6d0094;
+    color: white;
+}
+
+.paginate-by-element:hover .paginate-button {
+    background-color: #6d0094;
+    color: white;
 }

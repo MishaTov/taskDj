@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Assignment, User, File, Comment
+
+from user.models import User
+from .models import Assignment, File, Comment
 
 
 admin.site.register(Assignment)
