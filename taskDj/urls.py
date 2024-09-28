@@ -21,5 +21,6 @@ from assignment import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main_page),
-    path('assignment/', include('assignment.urls'))
+    path('', include('user.urls')),
+    path('assignment/', include('assignment.urls')),
 ]

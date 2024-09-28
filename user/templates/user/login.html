@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headlinks %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'user/css/login.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="form-div">
+        <form method="post" class="login-form">
+        {% csrf_token %}
+        <div style="margin-bottom: 25px">
+            <span class="form-field-label">{{ form.username.label }}</span>
+            <p>{{ form.username }}</p>
+            {% if form.username.errors %}
+                <p class="field-error-msg">{{ form.username.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <div style="margin-bottom: 25px">
+            <span class="form-field-label">{{ form.password.label }}</span>
+            <p>{{ form.password }}</p>
+            {% if form.password.errors %}
+                <p class="field-error-msg">{{ form.password.errors.0 }}</p>
+            {% endif %}
+        </div>
+        <div class="login_buttons">
+            <button type="submit" id="submit-form">Login</button>
+            <a style="text-decoration: none" href="#">Forgot password?</a>
+        </div>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="{% static 'user/js/login.js' %}"></script>
+{% endblock content %}

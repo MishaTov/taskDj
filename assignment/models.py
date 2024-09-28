@@ -1,6 +1,7 @@
 from os.path import splitext
 from uuid import uuid4
 
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -43,7 +44,7 @@ class Assignment(models.Model):
     created_by = models.CharField(null=True, blank=True)
     status = models.CharField(default=Status.PENDING)
     uuid = models.UUIDField(default=uuid4, unique=True)
-    workers = models.ManyToManyField(User, related_name='assignments')
+    workers = models.ManyToManyField(get_user_model(), related_name='assignments')
 
     def __str__(self):
         return self.subject
