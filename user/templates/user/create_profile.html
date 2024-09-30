@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% if not user.first_login %}
+    Here must be redirect to 404 but I haven't implement the 404 page yet
+{% endif %}
+
+
+{% load static %}
+
+{% block headlinks %}
+    {{ super }}
+{% endblock headlinks %}
+
+
+
+
+{% block content %}
+{% endblock content %}

@@ -3,6 +3,9 @@ from uuid import uuid4
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
+
+from taskDj.settings import AUTH_USER_MODEL
 
 
 class Assignment(models.Model):
@@ -44,10 +47,13 @@ class Assignment(models.Model):
     created_by = models.CharField(null=True, blank=True)
     status = models.CharField(default=Status.PENDING)
     uuid = models.UUIDField(default=uuid4, unique=True)
-    workers = models.ManyToManyField(get_user_model(), related_name='assignments')
+    workers = models.ManyToManyField(AUTH_USER_MODEL, related_name='assignments', blank=True)
 
     def __str__(self):
         return self.subject
+
+    def get_absolute_url(self):
+        return reverse('assignment_info', kwargs={'assignment_uuid': self.uuid})
 
 
 def get_upload_path(file, filename):

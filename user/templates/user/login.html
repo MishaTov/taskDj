@@ -12,7 +12,7 @@
         <form method="post" class="login-form">
         {% csrf_token %}
         <div style="margin-bottom: 25px">
-            <span class="form-field-label">{{ form.username.label }}</span>
+            <span class="form-field-label">Username or email</span>
             <p>{{ form.username }}</p>
             {% if form.username.errors %}
                 <p class="field-error-msg">{{ form.username.errors.0 }}</p>
