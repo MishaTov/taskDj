@@ -15,10 +15,11 @@ def generate_default_password():
     return urandom(25).hex()
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
 
     class Meta:
         db_table = 'users'
+        verbose_name = 'user'
 
     email = models.EmailField(max_length=100, unique=True)
     username = models.CharField(max_length=30, unique=True, default=generate_default_username, validators=[UsernamePatternValidator])

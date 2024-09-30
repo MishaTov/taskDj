@@ -8,3 +8,4 @@ urlpatterns = [
     path('create/', views.CreateAssignment.as_view(), name='create_assignment'),
     path('<uuid:assignment_uuid>/download/<uuid:file_uuid>', views.AssignmentInfo.download, name='download_file')
 ]
+

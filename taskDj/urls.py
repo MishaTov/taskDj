@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from assignment import views
+from django.conf.urls import handler404
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,3 +25,5 @@ urlpatterns = [
     path('', include('user.urls')),
     path('assignment/', include('assignment.urls')),
 ]
+
+handler404 = 'django.views.defaults.page_not_found'
