@@ -15,7 +15,7 @@ def generate_default_password():
     return urandom(25).hex()
 
 
-class User(AbstractUser):
+class CustomUser(AbstractUser):
 
     class Meta:
         db_table = 'users'

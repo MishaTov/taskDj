@@ -64,3 +64,9 @@ input.invalid {
     padding: 5px 20px 5px 20px;
     color: white;
 }
+
+.info-message {
+    color: yellow;
+    font-size: 18px;
+    margin-top: 5px;
+}
