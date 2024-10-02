@@ -16,7 +16,6 @@ def generate_default_password():
 
 
 class CustomUser(AbstractUser):
-
     class Meta:
         db_table = 'users'
         verbose_name = 'user'
