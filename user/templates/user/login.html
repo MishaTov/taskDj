@@ -26,9 +26,9 @@
                 <p class="field-error-msg">{{ form.password.errors.0 }}</p>
             {% endif %}
         </div>
-        {% for message in messages %}
-            <span class="info-message">{{ message }}</span>
-        {% endfor %}
+        {% if form.errors %}
+            <p class="field-error-msg">{{ form.non_field_errors.0 }}</p>
+        {% endif %}
         <div class="login_buttons">
             <button type="submit" id="submit-form">Login</button>
             <a style="text-decoration: none" href="#">Forgot password?</a>

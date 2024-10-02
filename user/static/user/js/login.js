@@ -15,4 +15,7 @@ for (let element of loginForm) {
             errorMsg.innerHTML = element.validationMessage;
         }
     })
+    if (element.getAttribute('aria-invalid') === 'true') {
+        element.classList.add('invalid');
+    }
 }
