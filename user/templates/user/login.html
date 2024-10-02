@@ -1,3 +1,4 @@
+
 {% extends 'base.html' %}
 {% load static %}
 
@@ -18,13 +19,16 @@
                 <p class="field-error-msg">{{ form.username.errors.0 }}</p>
             {% endif %}
         </div>
-        <div style="margin-bottom: 25px">
+        <div>
             <span class="form-field-label">{{ form.password.label }}</span>
             <p>{{ form.password }}</p>
             {% if form.password.errors %}
                 <p class="field-error-msg">{{ form.password.errors.0 }}</p>
             {% endif %}
         </div>
+        {% for message in messages %}
+            <span class="info-message">{{ message }}</span>
+        {% endfor %}
         <div class="login_buttons">
             <button type="submit" id="submit-form">Login</button>
             <a style="text-decoration: none" href="#">Forgot password?</a>
