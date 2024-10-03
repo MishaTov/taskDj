@@ -3,16 +3,17 @@
 
 {% block headlinks %}
     {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/create_assignment.css' %}">
 {% endblock headlinks %}
 
 {% block content %}
     <div class="form-div">
-        <form method="post" enctype="multipart/form-data" class="task-form">
-        <span class="required-field-msg">Required fields are marked <span style="color: #ad0000">*</span></span>
+        <form method="post" enctype="multipart/form-data" class="form-element task-form">
+        <span class="required-field-msg">Required fields are marked <span class="field-required-label">*</span></span>
         {% csrf_token %}
         {% for field in assignment_form %}
-            <span class="form-field-label">{{ field.label }} <span class="field-required-label">{{ field.help_text }}</span></span>
+            <span class="form-field-label big">{{ field.label }} <span class="field-required-label" style="font-size: 20px; position: absolute">{{ field.help_text }}</span></span>
             <div style="margin-bottom: 25px">
                 {{ field }}
                 {% if field.errors %}
@@ -27,9 +28,9 @@
                 <p class="field-error-msg">{{ file_form.file.errors.0 }}</p>
             {% endif %}
         </div>
-            <button type="submit" id="submit-form">Create task</button>
+            <button type="submit" class="submit-button">Create task</button>
         </form>
     </div>
 
-    <script type="text/javascript" src="{% static 'assignment/js/create_assignment.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
 {% endblock content %}

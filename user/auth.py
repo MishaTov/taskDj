@@ -21,7 +21,7 @@ class EmailUsernameAuthBackend(BaseBackend):
             return None
 
 
-def generate_registration_email(request, user: CustomUser):
+def generate_registration_email(user: CustomUser):
     subject = 'Complete registration'
     message = ''
     html_message = (f'<div style="font-size: 20px">'

@@ -2,11 +2,28 @@
 {% load static %}
 
 {% block headlinks %}
-    {{ super }}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'user/css/register.css' %}">
 {% endblock headlinks %}
 
-{% block mainmenu %}{% endblock mainmenu %}
-
 {% block content %}
-    <h1>Registration page</h1>
+    <div class="form-div">
+        <form method="post" class="form-element register-form">
+            <span class="required-field-msg">Required fields are marked <span class="field-required-label">*</span></span>
+            {% csrf_token %}
+            {% for field in form %}
+                <span class="form-field-label">{{ field.label }}<span class="field-required-label" style="font-size: 20px; position: absolute">*</span></span>
+                <div style="margin-bottom: 25px">
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="field-error-msg">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div style="display: flex; justify-content: center"><button type="submit" class="submit-button">Complete registration</button></div>
+        </form>
+    </div>
+
+    <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
 {% endblock content %}

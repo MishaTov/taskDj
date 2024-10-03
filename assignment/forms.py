@@ -30,16 +30,16 @@ class AssignmentForm(forms.ModelForm):
         date_widget = {'type': 'datetime-local',
                        'min': (now() + timedelta()).strftime('%Y-%m-%dT%H:%M'),
                        'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
-                       'class': 'form-field'}
+                       'class': 'form-control'}
 
         model = Assignment
         fields = ['subject', 'description', 'deadline', 'workers_limit', 'priority']
         widgets = {
-            'subject': forms.TextInput(attrs={'class': 'form-field'}),
-            'description': forms.Textarea(attrs={'class': 'form-field'}),
+            'subject': forms.TextInput(attrs={'class': 'form-control wide'}),
+            'description': forms.Textarea(attrs={'class': 'form-control wide'}),
             'deadline': forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget),
-            'workers_limit': forms.Select(attrs={'class': 'form-field'}),
-            'priority': forms.Select(attrs={'class': 'form-field'})
+            'workers_limit': forms.Select(attrs={'class': 'form-control'}),
+            'priority': forms.Select(attrs={'class': 'form-control'})
         }
         help_texts = {
             'subject': '*'

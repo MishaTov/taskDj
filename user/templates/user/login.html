@@ -4,13 +4,14 @@
 
 {% block headlinks %}
     {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'user/css/login.css' %}">
 {% endblock %}
 
 {% block content %}
 
     <div class="form-div">
-        <form method="post" class="login-form">
+        <form method="post" class="form-element login-form">
         {% csrf_token %}
         <div style="margin-bottom: 25px">
             <span class="form-field-label">Username or email</span>
@@ -30,11 +31,11 @@
             <p class="field-error-msg">{{ form.non_field_errors.0 }}</p>
         {% endif %}
         <div class="login_buttons">
-            <button type="submit" id="submit-form">Login</button>
+            <button type="submit" class="submit-button">Login</button>
             <a style="text-decoration: none" href="#">Forgot password?</a>
         </div>
         </form>
     </div>
 
-    <script type="text/javascript" src="{% static 'user/js/login.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
 {% endblock content %}

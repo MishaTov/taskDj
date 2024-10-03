@@ -1,16 +1,17 @@
-from django.contrib.auth import login
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login, get_user_model
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from django.views.generic import UpdateView
+
+from .forms import AuthForm, CompleteRegistrationForm
 
 
 class Login(LoginView):
     template_name = 'user/login.html'
-    form_class = AuthenticationForm
-    form_class.error_messages['invalid_login'] = 'Incorrect username/email or password'
+    form_class = AuthForm
 
     def form_valid(self, form):
         user = form.get_user()
@@ -24,15 +25,19 @@ class Login(LoginView):
         return reverse_lazy('assignment_list')
 
 
-class CreateProfile(View):
-    def get(self):
-        pass
+class CompleteRegistration(UpdateView):
+    template_name = 'user/registration_page.html'
+    form_class = CompleteRegistrationForm
+    model = get_user_model()
+    slug_field = 'username'
+    slug_url_kwarg = 'username'
 
-    def post(self):
-        pass
+    def get(self, request, *args, **kwargs):
+        if self.request.user.username != kwargs.get('username'):
+            return HttpResponseNotFound('page not found')
+        return super().get(request, *args, **kwargs)
 
-
-def registration(request, username):
-    if request.user.username == username:
-        return render(request, 'user/registration_page.html')
-    return HttpResponseNotFound('page not found')
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['username'] = ''
+        return initial
