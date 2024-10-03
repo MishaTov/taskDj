@@ -28,7 +28,6 @@ class CustomUser(AbstractUser):
     first_login = models.BooleanField(default=True)
     assignment_limit = models.IntegerField(default=5)
     current_assignment_number = models.IntegerField(default=0)
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 

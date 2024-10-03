@@ -31,9 +31,17 @@ class UsernamePatternValidator(FullMatchPatternValidator):
                'Username cannot starts or ends with underline')
     code = 'invalid_username'
 
+    def __init__(self, value, **kwargs):
+        super().__init__(**kwargs)
+        self.__call__(value)
+
 
 class NameValidator(FullMatchPatternValidator):
     regex = r'^(?!.*--)[A-Za-z]+(-[A-Za-z]+)*$'
     message = ('You can use only latin letters and hyphens. '
-               'Field cannot starts or ends with hyphens as well as two or more hyphens cannot go in a row')
+               'Hyphens cannot be at the beginning or end as well as two or more hyphens cannot go in a row')
     code = 'invalid_name'
+
+    def __init__(self, value, **kwargs):
+        super().__init__(**kwargs)
+        self.__call__(value)

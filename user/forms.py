@@ -22,14 +22,16 @@ class CompleteRegistrationForm(BaseUserCreationForm):
         model = get_user_model()
         fields = ['first_name', 'last_name', 'username', 'password1', 'password2']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control wide'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control wide'}),
-            'username': forms.TextInput(attrs={'class': 'form-control wide'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control wide', 'autocomplete': True}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control wide', 'autocomplete': True}),
+            'username': forms.TextInput(attrs={'class': 'form-control wide', 'autocomplete': True}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields.get('password1').widget.attrs['class'] = 'form-control wide'
-        self.fields.get('password1').widget.attrs['required'] = True
-        self.fields.get('password2').widget.attrs['class'] = 'form-control wide'
-        self.fields.get('password2').widget.attrs['required'] = True
+        password1_attrs = self.fields.get('password1').widget.attrs
+        password2_attrs = self.fields.get('password2').widget.attrs
+        password1_attrs['class'] = 'form-control wide'
+        password2_attrs['class'] = 'form-control wide'
+        password1_attrs['required'] = True
+        password2_attrs['required'] = True

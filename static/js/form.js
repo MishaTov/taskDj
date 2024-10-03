@@ -16,8 +16,8 @@ for (let form of forms) {
                 errorMsg.innerHTML = element.validationMessage;
             }
         })
-    }
-    if (element.getAttribute('aria-invalid') === 'true') {
-        element.classList.add('invalid');
+        if (element.getAttribute('aria-invalid') === 'true') {
+            element.classList.add('invalid');
+        }
     }
 }

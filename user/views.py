@@ -7,6 +7,7 @@ from django.views import View
 from django.views.generic import UpdateView
 
 from .forms import AuthForm, CompleteRegistrationForm
+from .models import CustomUser
 
 
 class Login(LoginView):
@@ -28,16 +29,18 @@ class Login(LoginView):
 class CompleteRegistration(UpdateView):
     template_name = 'user/registration_page.html'
     form_class = CompleteRegistrationForm
-    model = get_user_model()
+    model: CustomUser = get_user_model()
     slug_field = 'username'
     slug_url_kwarg = 'username'
+    success_url = reverse_lazy('assignment_list')
 
     def get(self, request, *args, **kwargs):
-        if self.request.user.username != kwargs.get('username'):
+        if request.user.username != kwargs.get('username'):
             return HttpResponseNotFound('page not found')
         return super().get(request, *args, **kwargs)
 
-    def get_initial(self):
-        initial = super().get_initial()
-        initial['username'] = ''
-        return initial
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.first_login = False
+        user.save()
+        return super().form_valid(form)
