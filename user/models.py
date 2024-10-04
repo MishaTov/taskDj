@@ -7,10 +7,6 @@ from django.db import models
 from .validators import UsernamePatternValidator, NameValidator
 
 
-def generate_default_username():
-    return f'user_{urandom(12).hex()}'
-
-
 def generate_default_password():
     return urandom(25).hex()
 
@@ -21,7 +17,7 @@ class CustomUser(AbstractUser):
         verbose_name = 'user'
 
     email = models.EmailField(max_length=100, unique=True)
-    username = models.CharField(max_length=30, unique=True, default=generate_default_username, validators=[UsernamePatternValidator])
+    username = models.CharField(max_length=30, unique=True, null=True, validators=[UsernamePatternValidator])
     password = models.CharField(max_length=128, default=generate_default_password, validators=[validate_password])
     first_name = models.CharField(max_length=50, null=True, validators=[NameValidator])
     last_name = models.CharField(max_length=50, null=True, validators=[NameValidator])

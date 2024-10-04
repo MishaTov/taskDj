@@ -15,7 +15,7 @@ class CustomUserAdmin(admin.ModelAdmin):
     ordering = ['id']
 
     def save_model(self, request, obj, form, change):
-        subject, message, html_message = generate_registration_email(obj)
+        subject, message, html_message = generate_registration_email(request, obj)
         obj.email_user(
             subject=subject,
             message=message,
