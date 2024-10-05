@@ -14,17 +14,22 @@
                 <strong>Filters</strong>
             </div>
             <div style="padding: 0 20px 0 20px; width: 80%">
-                <div style="display: inline-flex">
-                    <h1>Assignments</h1>
-                    <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
-                    <span style="font-size: 20px; align-self: center">&nbsp;&nbsp;&nbsp;Assignments per page: &nbsp;</span>
-                    <div class="paginate-by-element">
-                      <button class="paginate-button">{{ paginate_by }}</button>
-                        <div class="dropdown-paginate-by">
-                          <span>5</span>
-                          <span>10</span>
-                          <span>20</span>
-                          <span>50</span>
+                <div style="display: inline-flex; width: 100%; justify-content: space-between">
+                    <div style="display: inline-flex">
+                        <h1>Assignments</h1>
+                        {% if request.user.is_authenticated %}
+                        <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
+                        {% endif %}
+                    </div>
+                    <div style="font-size: 20px; align-self: center">&nbsp;&nbsp;&nbsp;Assignments per page: &nbsp;
+                        <div class="paginate-by-element">
+                        <button class="paginate-button">{{ paginate_by }}</button>
+                            <div class="dropdown-paginate-by">
+                                <span>5</span>
+                                <span>10</span>
+                                <span>20</span>
+                                <span>50</span>
+                            </div>
                         </div>
                     </div>
                 </div>

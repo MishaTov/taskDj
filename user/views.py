@@ -1,5 +1,5 @@
-from django.contrib.auth import login, get_user_model
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import login, get_user_model, logout
+from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -13,6 +13,11 @@ class Login(LoginView):
     template_name = 'user/login.html'
     form_class = AuthForm
 
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(self.get_success_url())
+        return super().get(request, *args, **kwargs)
+
     def form_valid(self, form):
         user = form.get_user()
         login(self.request, user)
@@ -24,6 +29,14 @@ class Login(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('assignment_list')
+
+
+class Logout(LogoutView):
+    http_method_names = ['get']
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('assignment_list')
 
 
 class CompleteRegistration(UpdateView):
@@ -43,6 +56,7 @@ class CompleteRegistration(UpdateView):
         user = form.save(commit=False)
         user.first_login = False
         user.save()
+        login(self.request, user)
         return redirect(self.get_success_url())
 
     def get_object(self, queryset=None):

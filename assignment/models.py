@@ -43,10 +43,10 @@ class Assignment(models.Model):
     current_workers_number = models.IntegerField(default=0)
     priority = models.CharField(choices=PRIORITY_CHOICES, default='L')
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(null=True, blank=True)
     status = models.CharField(default=Status.PENDING)
     uuid = models.UUIDField(default=uuid4, unique=True)
-    workers = models.ManyToManyField(AUTH_USER_MODEL, related_name='assignments', blank=True)
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='created_assignments', null=True, on_delete=models.SET_NULL)
+    workers = models.ManyToManyField(AUTH_USER_MODEL, related_name='assignments')
 
     def __str__(self):
         return self.subject

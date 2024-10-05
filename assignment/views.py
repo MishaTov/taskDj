@@ -1,8 +1,9 @@
 from django.db import transaction
 from django.http import HttpRequest, FileResponse, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 
 from .forms import AssignmentForm, FileForm
 from .models import File, Assignment
@@ -80,7 +81,9 @@ class CreateAssignment(View):
         file_form = FileForm(request.POST, request.FILES)
         if assignment_form.is_valid() and file_form.is_valid():
             with transaction.atomic():
-                assignment = assignment_form.save()
+                assignment = assignment_form.save(commit=False)
+                assignment.created_by = request.user
+                assignment.save()
                 File.objects.bulk_create([
                     File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
                 ])

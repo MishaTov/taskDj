@@ -16,14 +16,14 @@
                 <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
                 <p class="p-extra"><strong>Due to:</strong> <span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o, G:i' }}</span></p>
                 <p class="p-extra"><strong>Time remaining:</strong> <span class="time-left"></span></p>
-                <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }} <strong>by</strong> <a href="#">{{ assignment.created_by }}</a></p>
+                <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }} {% if assignment.created_by %}<strong>by</strong> <a href="#" style="text-decoration: none; color: #6d0094">{{ assignment.created_by.username }}</a>{% endif %}</p>
                 <br>
                 <button type="button" class="action-button accept">Accept task</button>
                 <button type="button" class="action-button reject">Reject task</button>
             </div>
-            <div class="extra-info">
+            <div class="extra-info" style="display: flex; flex-wrap: wrap; gap: 5px">
                 {% for file in assignment.file_set.all %}
-                    <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}"><span style="overflow: hidden; text-overflow: ellipsis">{{ file.file|get_filename }}</span></a>
+                    <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}">{{ file.file|get_filename }}</a>
                 {% endfor %}
             </div>
         </div>
