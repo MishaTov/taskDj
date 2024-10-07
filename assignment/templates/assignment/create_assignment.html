@@ -1,10 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load template_filters %}
 
 {% block headlinks %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/file_class.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/create_assignment.css' %}">
+    {% if request.resolver_match.url_name == 'update_assignment' %}
+        <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/update_assignment.css' %}">
+    {% endif %}
 {% endblock headlinks %}
 
 {% block content %}
@@ -23,14 +28,28 @@
         {% endfor %}
         <span class="form-field-label">{{ file_form.file.label }}</span>
         <div>
-            <p>{{ file_form.file }}</p>
+            {{ file_form.file }}
             {% if file_form.file.errors %}
                 <p class="field-error-msg">{{ file_form.file.errors.0 }}</p>
             {% endif %}
+            {% if request.resolver_match.url_name == 'update_assignment' and attachments%}
+                <p><button type="button" class="show-attachments-button">Show attachments for this assignment ↓</button></p>
+            {% endif %}
         </div>
-            <button type="submit" class="submit-button">Create task</button>
+        {% if request.resolver_match.url_name == 'update_assignment' %}
+            <div class="attachments hidden">
+                {% for file in attachments %}
+                    <div style="position: relative; margin-right: 20px">
+                        <a class="file" href="{% url 'download_file' assignment_form.instance.uuid file.uuid %}">{{ file.file|get_filename }}</a>
+                        <button type="button" class="delete-file-button">+</button>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+            <p><button type="submit" class="submit-button">Create task</button></p>
         </form>
     </div>
 
     <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assignment/js/update_assignment.js' %}"></script>
 {% endblock content %}

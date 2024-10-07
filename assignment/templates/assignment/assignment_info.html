@@ -4,11 +4,16 @@
 
 {% block headlinks %}
     {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/file_class.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/assignment_info.css' %}">
 {% endblock headlinks %}
 
 {% block content %}
-    <div class="subject">{{ assignment.subject }}</div>
+    <div class="subject">
+        {{ assignment.subject }}
+        <a href="{% url 'update_assignment' assignment.uuid %}"><img src="{% static 'assignment/img/edit_assignment.png' %}" alt="Edit assignment" style="height: 20px; width: 20px; margin-left: 20px"></a>
+        <a href="#"><img src="{% static 'assignment/img/delete_assignment.png' %}" alt="Delete assignment" style="height: 20px; width: 20px; margin-left: 5px"></a>
+    </div>
     <div style="display: flex">
         <div>
             <div class="extra-info">
@@ -21,11 +26,16 @@
                 <button type="button" class="action-button accept">Accept task</button>
                 <button type="button" class="action-button reject">Reject task</button>
             </div>
-            <div class="extra-info" style="display: flex; flex-wrap: wrap; gap: 5px">
-                {% for file in assignment.file_set.all %}
-                    <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}">{{ file.file|get_filename }}</a>
-                {% endfor %}
-            </div>
+            {% if assignment.file_set.all %}
+                <div class="extra-info">
+                    <strong style="font-size: 20px">Attachments:</strong>
+                    <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px">
+                        {% for file in assignment.file_set.all %}
+                            <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}">{{ file.file|get_filename }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
         </div>
         <div class="general-info">
             {% if not assignment.description %} <h3>This task has no description</h3> {% endif %}

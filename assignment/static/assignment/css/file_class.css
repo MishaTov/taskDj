@@ -1,0 +1,20 @@
+.file {
+    display: block;
+    background-color: white;
+    border: 2px solid #6d0094;
+    border-radius: 5px;
+    padding: 5px;
+    width: 180px;
+    height: 20px;
+    text-decoration: none;
+    color: #6d0094;
+    font-size: 16px;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.file:hover {
+    background-color: #6d0094;
+    color: white;
+    transition: 0.5s;
+}

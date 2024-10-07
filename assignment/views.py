@@ -1,12 +1,13 @@
 from django.db import transaction
-from django.http import HttpRequest, FileResponse, HttpResponseNotFound
+from django.http import HttpRequest, FileResponse, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import ListView, DetailView
+from django.utils.timezone import localtime
 
 from .forms import AssignmentForm, FileForm
 from .models import File, Assignment
+from .templatetags.template_filters import get_filename
 
 
 def main_page(request):
@@ -63,7 +64,8 @@ class AssignmentInfo(DetailView):
     @staticmethod
     def download(request, assignment_uuid, file_uuid):
         file = get_object_or_404(File, uuid=file_uuid)
-        response = FileResponse(file.file, 'rb', as_attachment=True)
+        filename = get_filename(file.file)
+        response = FileResponse(file.file, 'rb', filename=filename, as_attachment=True)
         return response
 
 
@@ -74,6 +76,36 @@ class CreateAssignment(View):
         file_form = FileForm()
         context = {'assignment_form': assignment_form,
                    'file_form': file_form}
+        return render(request, 'assignment/create_assignment.html', context=context)
+
+    def post(self, request: HttpRequest):
+        assignment_form = AssignmentForm(request.POST)
+        file_form = FileForm(request.POST, request.FILES)
+        if assignment_form.is_valid() and file_form.is_valid():
+            with transaction.atomic():
+                assignment = assignment_form.save(commit=False)
+                assignment.created_by = request.user
+                assignment.save()
+                File.objects.bulk_create([
+                    File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
+                ])
+        else:
+            context = {'assignment_form': assignment_form,
+                       'file_form': file_form}
+            return render(request, 'assignment/create_assignment.html', context=context)
+        return redirect('assignment_list')
+
+
+class UpdateAssignment(View):
+
+    def get(self, request, assignment_uuid):
+        assignment = Assignment.objects.get(uuid=assignment_uuid)
+        assignment.deadline = localtime(assignment.deadline).strftime('%Y-%m-%dT%H:%M')
+        assignment_form = AssignmentForm(instance=assignment)
+        file_form = FileForm()
+        context = {'assignment_form': assignment_form,
+                   'file_form': file_form,
+                   'attachments': assignment.file_set.all()}
         return render(request, 'assignment/create_assignment.html', context=context)
 
     def post(self, request: HttpRequest):

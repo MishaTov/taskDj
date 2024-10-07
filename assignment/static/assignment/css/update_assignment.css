@@ -1,0 +1,45 @@
+.show-attachments-button {
+    background-color: inherit;
+    border: 2px solid #6d0094;
+    border-radius: 5px;
+    padding: 5px;
+    text-decoration: none;
+    color: #6d0094;
+    font-size: 14px;
+}
+
+.show-attachments-button:hover {
+    background-color: #6d0094;
+    color: white;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.attachments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+    margin-top: 10px
+}
+
+.attachments.hidden {
+    display: none;
+}
+
+.delete-file-button {
+    position: absolute;
+    display: flex;
+    right: -15px;
+    top: -10px;
+    padding: 0;
+    background-color: inherit;
+    border: 1px solid #6d0094;
+    border-radius: 100%;
+    height: 15px;
+    width: 15px;
+    color: #6d0094;
+    align-items: center;
+    justify-content: center;
+    rotate: 45deg;
+    cursor: pointer;
+}

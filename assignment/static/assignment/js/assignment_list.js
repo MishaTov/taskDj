@@ -1,16 +1,3 @@
-// const paginateForm = document.getElementById('paginate-form')
-//
-// paginateForm.addEventListener('change', (event) => {
-//     const params = new URLSearchParams(window.location.search);
-//     params.set('paginate_by', event.target.value);
-//     window.location.href = `${window.location.pathname}?${params.toString()}`;
-// })
-//
-
-// .paginate-by-element:hover .dropdown-paginate-by {
-//     display: block;
-// }
-
 const paginateButton = document.querySelector('.paginate-button');
 const paginateContent = document.querySelector('.dropdown-paginate-by');
 const paginateByLinks = document.querySelectorAll('.dropdown-paginate-by span')
