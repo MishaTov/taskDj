@@ -108,17 +108,12 @@ class UpdateAssignment(View):
                    'attachments': assignment.file_set.all()}
         return render(request, 'assignment/create_assignment.html', context=context)
 
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest, assignment_uuid):
         assignment_form = AssignmentForm(request.POST)
         file_form = FileForm(request.POST, request.FILES)
         if assignment_form.is_valid() and file_form.is_valid():
             with transaction.atomic():
-                assignment = assignment_form.save(commit=False)
-                assignment.created_by = request.user
-                assignment.save()
-                File.objects.bulk_create([
-                    File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
-                ])
+                pass
         else:
             context = {'assignment_form': assignment_form,
                        'file_form': file_form}

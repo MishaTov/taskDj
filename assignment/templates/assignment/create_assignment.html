@@ -14,17 +14,17 @@
 
 {% block content %}
     <div class="form-div">
-        <form method="post" enctype="multipart/form-data" class="form-element task-form">
+        <form method="post" enctype="multipart/form-data" class="form-element task-form" id="task-form">
         <span class="required-field-msg">Required fields are marked <span class="field-required-label">*</span></span>
         {% csrf_token %}
         {% for field in assignment_form %}
-            <span class="form-field-label big">{{ field.label }} <span class="field-required-label" style="font-size: 20px; position: absolute">{{ field.help_text }}</span></span>
-            <div style="margin-bottom: 25px">
-                {{ field }}
-                {% if field.errors %}
-                    <p class="field-error-msg">{{ field.errors.0 }}</p>
-                {% endif %}
-            </div>
+                <span class="form-field-label big">{{ field.label }} <span class="field-required-label" style="font-size: 20px; position: absolute">{{ field.help_text }}</span></span>
+                <div style="margin-bottom: 25px">
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="field-error-msg">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
         {% endfor %}
         <span class="form-field-label">{{ file_form.file.label }}</span>
         <div>
@@ -32,18 +32,24 @@
             {% if file_form.file.errors %}
                 <p class="field-error-msg">{{ file_form.file.errors.0 }}</p>
             {% endif %}
-            {% if request.resolver_match.url_name == 'update_assignment' and attachments%}
+            {% if request.resolver_match.url_name == 'update_assignment' and attachments %}
                 <p><button type="button" class="show-attachments-button">Show attachments for this assignment ↓</button></p>
             {% endif %}
         </div>
-        {% if request.resolver_match.url_name == 'update_assignment' %}
-            <div class="attachments hidden">
-                {% for file in attachments %}
-                    <div style="position: relative; margin-right: 20px">
-                        <a class="file" href="{% url 'download_file' assignment_form.instance.uuid file.uuid %}">{{ file.file|get_filename }}</a>
-                        <button type="button" class="delete-file-button">+</button>
-                    </div>
-                {% endfor %}
+        {% if request.resolver_match.url_name == 'update_assignment' and attachments %}
+            <div class="attachments-element hidden">
+                <p style="font-size: 20px;">Select files you want to remove from this task</p>
+                <div class="attachments">
+                    {% for file in attachments %}
+                        <div style="position: relative; display: flex">
+                            <label style="display: flex">
+                                <a class="file" href="{% url 'download_file' assignment_form.instance.uuid file.uuid %}">{{ file.file|get_filename }}</a>
+                                <input type="checkbox" class="delete-file" value="{{ file.uuid}}">
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <input type="hidden" name="files-to-delete" id="files-to-delete" value="">
             </div>
         {% endif %}
             <p><button type="submit" class="submit-button">Create task</button></p>

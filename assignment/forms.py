@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 
-from .models import Assignment
+from .models import Assignment, File
 
 
 class MultipleFileInput(forms.ClearableFileInput):

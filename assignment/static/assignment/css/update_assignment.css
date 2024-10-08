@@ -19,10 +19,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px 20px;
-    margin-top: 10px
 }
 
-.attachments.hidden {
+.attachments-element.hidden {
     display: none;
 }
 
