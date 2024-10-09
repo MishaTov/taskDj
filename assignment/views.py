@@ -1,9 +1,10 @@
 from django.db import transaction
-from django.http import HttpRequest, FileResponse, HttpResponse
+from django.http import HttpRequest, FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views import View
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
 from django.utils.timezone import localtime
+from django.views import View
+from django.views.generic import ListView, DetailView, DeleteView
 
 from .forms import AssignmentForm, FileForm
 from .models import File, Assignment
@@ -109,13 +110,32 @@ class UpdateAssignment(View):
         return render(request, 'assignment/create_assignment.html', context=context)
 
     def post(self, request: HttpRequest, assignment_uuid):
-        assignment_form = AssignmentForm(request.POST)
+        assignment = Assignment.objects.get(uuid=assignment_uuid)
+        assignment_form = AssignmentForm(request.POST, instance=assignment)
         file_form = FileForm(request.POST, request.FILES)
         if assignment_form.is_valid() and file_form.is_valid():
             with transaction.atomic():
-                pass
+                updated_data = assignment_form.changed_data
+                for field in updated_data:
+                    field_data = assignment_form.cleaned_data.get(field)
+                    setattr(assignment, field, field_data)
+                assignment.save(update_fields=updated_data)
+                File.objects.bulk_create([
+                    File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
+                ])
+                files_to_delete = request.POST.get('files-to-delete').strip().split()
+                File.objects.filter(uuid__in=files_to_delete).delete()
         else:
             context = {'assignment_form': assignment_form,
                        'file_form': file_form}
             return render(request, 'assignment/create_assignment.html', context=context)
-        return redirect('assignment_list')
+        return redirect('assignment_info', assignment_uuid=assignment.uuid)
+
+
+class DeleteAssignment(DeleteView):
+    model = Assignment
+    success_url = reverse_lazy('assignment_list')
+
+    def get_object(self, queryset=None):
+        assignment_uuid = self.kwargs.get('assignment_uuid')
+        return get_object_or_404(Assignment, uuid=assignment_uuid)

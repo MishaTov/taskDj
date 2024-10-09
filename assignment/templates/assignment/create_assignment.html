@@ -6,6 +6,7 @@
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/file_class.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/show_hide_attachments.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/create_assignment.css' %}">
     {% if request.resolver_match.url_name == 'update_assignment' %}
         <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/update_assignment.css' %}">
@@ -33,11 +34,11 @@
                 <p class="field-error-msg">{{ file_form.file.errors.0 }}</p>
             {% endif %}
             {% if request.resolver_match.url_name == 'update_assignment' and attachments %}
-                <p><button type="button" class="show-attachments-button">Show attachments for this assignment ↓</button></p>
+                <p><button type="button" class="show-attachments-button">Attachments ↓</button></p>
             {% endif %}
         </div>
         {% if request.resolver_match.url_name == 'update_assignment' and attachments %}
-            <div class="attachments-element hidden">
+            <div class="attachments-section hidden">
                 <p style="font-size: 20px;">Select files you want to remove from this task</p>
                 <div class="attachments">
                     {% for file in attachments %}
@@ -52,10 +53,20 @@
                 <input type="hidden" name="files-to-delete" id="files-to-delete" value="">
             </div>
         {% endif %}
-            <p><button type="submit" class="submit-button">Create task</button></p>
+            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px">
+                <button type="submit" class="button violet">
+                    {% if request.resolver_match.url_name == 'update_assignment' %}
+                        Save changes
+                    {% else %}
+                        Create assignment
+                    {% endif %}
+                </button>
+                <a href="{{ request.META.HTTP_REFERER }}" class="button red" style="font-family: Arial; text-decoration: none">Cancel</a>
+            </div>
         </form>
     </div>
 
     <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
     <script type="text/javascript" src="{% static 'assignment/js/update_assignment.js' %}"></script>
 {% endblock content %}

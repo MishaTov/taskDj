@@ -57,6 +57,75 @@
     padding: 20px;
     display: flex;
     justify-content: center;
-    text-align: center;
+    /*text-align: center;*/
+    align-items: center;
     word-break: break-word;
+    gap: 10px;
+}
+
+.assignment-action-img {
+    height: 20px;
+    width: 20px;
+}
+
+.assignment-action-button {
+    height: 20px;
+    width: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.assignment-action-button:hover {
+    cursor: pointer;
+}
+
+.delete-assignment-background {
+    z-index: 100;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -8px;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.delete-assignment-window {
+    width: 450px;
+    height: 140px;
+    border: 2px solid #6d0094;
+    border-radius: 15px;
+    background-color: #fbf3ff;
+    padding: 20px;
+}
+
+.button {
+    width: fit-content;
+    height: fit-content;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 3px 15px 3px 15px;
+}
+
+.button.delete {
+    background-color: #ad0000;
+    color: white;
+}
+
+.button.delete:hover {
+    background-color: #8e0000;
+    transition: 0.3s;
+}
+
+.button.cancel {
+    background-color: #d3bedf;
+    color: black;
+}
+
+.button.cancel:hover {
+    background-color: #bea3ce;
+    transition: 0.3s;
 }

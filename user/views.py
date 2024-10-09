@@ -36,7 +36,7 @@ class Logout(LogoutView):
 
     def get(self, request, *args, **kwargs):
         logout(request)
-        return redirect('assignment_list')
+        return redirect('login_page')
 
 
 class CompleteRegistration(UpdateView):

@@ -1,0 +1,16 @@
+.show-attachments-button {
+    background-color: inherit;
+    border: 2px solid #6d0094;
+    border-radius: 5px;
+    padding: 5px;
+    text-decoration: none;
+    color: #6d0094;
+    font-size: 14px;
+}
+
+.show-attachments-button:hover {
+    background-color: #6d0094;
+    color: white;
+    transition: 0.5s;
+    cursor: pointer;
+}

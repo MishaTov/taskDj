@@ -47,13 +47,24 @@
     position: relative;
 }
 
-.submit-button {
+.button {
     width: fit-content;
     height: fit-content;
-    background-color: rgba(109, 0, 148, 0.7);
     border: none;
     border-radius: 5px;
     font-size: 16px;
     padding: 5px 20px 5px 20px;
     color: white;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button.violet {
+    background-color: rgba(109, 0, 148, 0.7);
+}
+
+.button.red {
+    background-color: #ad0000;
 }
