@@ -12,6 +12,7 @@ from .forms import AuthForm, CompleteRegistrationForm
 class Login(LoginView):
     template_name = 'user/login.html'
     form_class = AuthForm
+    extra_context = {'title': 'Login'}
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -44,6 +45,7 @@ class CompleteRegistration(UpdateView):
     form_class = CompleteRegistrationForm
     model = get_user_model()
     success_url = reverse_lazy('assignment_list')
+    extra_context = {'title': 'Complete registration'}
 
     def get(self, request, *args, **kwargs):
         user = self.get_object()

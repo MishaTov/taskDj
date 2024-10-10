@@ -20,6 +20,9 @@ class AssignmentView(ListView):
     model = Assignment
     context_object_name = 'assignments'
     paginate_by = 5
+    extra_context = {'title': 'Assignments',
+                     'status_color_labels': Assignment.Status.COLOR_LABELS,
+                     'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
 
     def get(self, request: HttpRequest, *args, **kwargs):
         request.GET = request.GET.copy()
@@ -33,8 +36,6 @@ class AssignmentView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['status_color_labels'] = Assignment.Status.COLOR_LABELS
-        context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
         if not context.get('paginate_by'):
             context['paginate_by'] = self.paginate_by
         paginator = context.get('paginator')
@@ -43,7 +44,7 @@ class AssignmentView(ListView):
         filters = ''
         for param, value in self.request.GET.items():
             if param != 'page':
-                filters += '&' + param + '=' + str(value)
+                filters += f'&{param}={value}'
         context['filters'] = filters
         return context
 
@@ -54,12 +55,12 @@ class AssignmentInfo(DetailView):
     context_object_name = 'assignment'
     slug_url_kwarg = 'assignment_uuid'
     slug_field = 'uuid'
+    extra_context = {'status_color_labels': Assignment.Status.COLOR_LABELS,
+                     'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context['assignment'].subject
-        context['status_color_labels'] = Assignment.Status.COLOR_LABELS
-        context['priority_color_labels'] = Assignment.PRIORITY_COLOR_LABELS
         return context
 
     @staticmethod
@@ -76,7 +77,8 @@ class CreateAssignment(View):
         assignment_form = AssignmentForm()
         file_form = FileForm()
         context = {'assignment_form': assignment_form,
-                   'file_form': file_form}
+                   'file_form': file_form,
+                   'title': 'Create assignment'}
         return render(request, 'assignment/create_assignment.html', context=context)
 
     def post(self, request: HttpRequest):
@@ -92,7 +94,8 @@ class CreateAssignment(View):
                 ])
         else:
             context = {'assignment_form': assignment_form,
-                       'file_form': file_form}
+                       'file_form': file_form,
+                       'title': 'Create assignment'}
             return render(request, 'assignment/create_assignment.html', context=context)
         return redirect('assignment_list')
 
@@ -101,12 +104,14 @@ class UpdateAssignment(View):
 
     def get(self, request, assignment_uuid):
         assignment = Assignment.objects.get(uuid=assignment_uuid)
-        assignment.deadline = localtime(assignment.deadline).strftime('%Y-%m-%dT%H:%M')
+        if assignment.deadline:
+            assignment.deadline = localtime(assignment.deadline).strftime('%Y-%m-%dT%H:%M')
         assignment_form = AssignmentForm(instance=assignment)
         file_form = FileForm()
         context = {'assignment_form': assignment_form,
                    'file_form': file_form,
-                   'attachments': assignment.file_set.all()}
+                   'attachments': assignment.file_set.all(),
+                   'title': assignment.subject}
         return render(request, 'assignment/create_assignment.html', context=context)
 
     def post(self, request: HttpRequest, assignment_uuid):
@@ -123,11 +128,12 @@ class UpdateAssignment(View):
                 File.objects.bulk_create([
                     File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
                 ])
-                files_to_delete = request.POST.get('files-to-delete').strip().split()
-                File.objects.filter(uuid__in=files_to_delete).delete()
+                files_to_delete = request.POST.get('files-to-delete', default='').split()
+                assignment.remove_files(files_to_delete)
         else:
             context = {'assignment_form': assignment_form,
-                       'file_form': file_form}
+                       'file_form': file_form,
+                       'title': assignment.subject}
             return render(request, 'assignment/create_assignment.html', context=context)
         return redirect('assignment_info', assignment_uuid=assignment.uuid)
 

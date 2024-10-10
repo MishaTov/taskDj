@@ -75,6 +75,10 @@
     </div>
 
     <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assignment/js/delete_assignment.js' %}"></script>
+    {% if assignment.file_set.all %}
+        <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
+    {% endif %}
+    {% if request.user.username == assignment.created_by.username %}
+        <script type="text/javascript" src="{% static 'assignment/js/delete_assignment.js' %}"></script>
+    {% endif %}
 {% endblock content %}

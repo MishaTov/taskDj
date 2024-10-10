@@ -40,12 +40,13 @@
         {% if request.resolver_match.url_name == 'update_assignment' and attachments %}
             <div class="attachments-section hidden">
                 <p style="font-size: 20px;">Select files you want to remove from this task</p>
+                <p>Select all<input type="checkbox" id="select-all"></p>
                 <div class="attachments">
                     {% for file in attachments %}
                         <div style="position: relative; display: flex">
                             <label style="display: flex">
                                 <a class="file" href="{% url 'download_file' assignment_form.instance.uuid file.uuid %}">{{ file.file|get_filename }}</a>
-                                <input type="checkbox" class="delete-file" value="{{ file.uuid}}">
+                                <input type="checkbox" class="delete-file" value="{{ file.uuid }}">
                             </label>
                         </div>
                     {% endfor %}
@@ -67,6 +68,8 @@
     </div>
 
     <script type="text/javascript" src="{% static 'js/form.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
     <script type="text/javascript" src="{% static 'assignment/js/update_assignment.js' %}"></script>
+    {% if attachments %}
+        <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
+    {% endif %}
 {% endblock content %}

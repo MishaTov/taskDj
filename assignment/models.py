@@ -4,7 +4,9 @@ from uuid import uuid4
 from django.db import models
 from django.urls import reverse
 
-from taskDj.settings import AUTH_USER_MODEL
+from taskDj.settings import AUTH_USER_MODEL, BASE_DIR
+import os
+from shutil import rmtree
 
 
 class Assignment(models.Model):
@@ -48,11 +50,35 @@ class Assignment(models.Model):
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='created_assignments', null=True, on_delete=models.SET_NULL)
     workers = models.ManyToManyField(AUTH_USER_MODEL, related_name='assignments')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__uploads_dir = self.get_uploads_dir()
+
     def __str__(self):
         return self.subject
 
     def get_absolute_url(self):
         return reverse('assignment_info', kwargs={'assignment_uuid': self.uuid})
+
+    def remove_files(self, files_uuid: list[str]):
+        for file_uuid in files_uuid:
+            file = self.file_set.get(uuid=file_uuid)
+            file.delete()
+        if not any(os.scandir(self.__uploads_dir)):
+            self.delete_uploads_dir()
+        self.file_set.filter(uuid__in=files_uuid).delete()
+
+    def delete(self, using=None, keep_parents=False):
+        self.delete_uploads_dir()
+        super().delete(using, keep_parents)
+
+    def get_uploads_dir(self):
+        path = os.path.join(BASE_DIR, 'assignment', 'uploads', str(self.uuid))
+        return path if os.path.isdir(path) else None
+
+    def delete_uploads_dir(self):
+        if self.__uploads_dir:
+            rmtree(self.__uploads_dir)
 
 
 def get_upload_path(file, filename):
@@ -68,6 +94,11 @@ class File(models.Model):
     uuid = models.UUIDField(default=uuid4, unique=True)
     file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
+    
+    def delete(self, using=None, keep_parents=False):
+        filepath = os.path.join(BASE_DIR, os.path.normpath(str(self.file)))
+        os.remove(filepath)
+        super().delete(using, keep_parents)
 
 
 class Comment(models.Model):
