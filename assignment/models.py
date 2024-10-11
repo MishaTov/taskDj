@@ -107,7 +107,7 @@ class Comment(models.Model):
 
     content = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.CharField(null=True, blank=True)
     is_edited = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid4, unique=True)
+    created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments', null=True, on_delete=models.SET_NULL)
     assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
