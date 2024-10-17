@@ -1,7 +1,7 @@
 .extra-info {
     border-right: 2px solid #f8afff;
     border-bottom: 2px solid #f8afff;
-    width: 400px;
+    width: 100%;
     margin-left: -8px;
     padding: 10px;
     height: fit-content;
@@ -128,4 +128,16 @@
 .button.cancel:hover {
     background-color: #bea3ce;
     transition: 0.3s;
+}
+
+.comments-section {
+    border-left: 2px solid #f8afff;
+    border-bottom: 2px solid #f8afff;
+    margin-right: -8px;
+    padding: 20px;
+    height: 90%;
+}
+
+.type-comment {
+
 }

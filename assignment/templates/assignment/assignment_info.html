@@ -44,7 +44,7 @@
         {% endif %}
     </div>
     <div style="display: flex">
-        <div>
+        <div style="width: 21%">
             <div class="extra-info">
                 <p class="p-extra"><span style="color: {{ status_color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }}</p><br><br>
                 <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
@@ -72,6 +72,15 @@
             {% if not assignment.description %} <h3>This task has no description</h3> {% endif %}
             {{ assignment.description }}
         </div>
+        <div style="width: 15%; margin-left: auto">
+            <div class="comments-section">
+
+            </div>
+            <div class="type-comment">
+                
+            </div>
+        </div>
+
     </div>
 
     <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>
