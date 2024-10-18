@@ -4,7 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils.timezone import now
 
-from .models import Assignment, File
+from .models import Assignment, File, Comment
 
 
 class MultipleFileInput(forms.ClearableFileInput):
@@ -27,13 +27,12 @@ class MultipleFileField(forms.FileField):
 
 class AssignmentForm(forms.ModelForm):
     class Meta:
+        model = Assignment
+        fields = ['subject', 'description', 'deadline', 'workers_limit', 'priority']
         date_widget = {'type': 'datetime-local',
                        'min': (now() + timedelta()).strftime('%Y-%m-%dT%H:%M'),
                        'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
                        'class': 'form-control'}
-
-        model = Assignment
-        fields = ['subject', 'description', 'deadline', 'workers_limit', 'priority']
         widgets = {
             'subject': forms.TextInput(attrs={'class': 'form-control wide'}),
             'description': forms.Textarea(attrs={'class': 'form-control wide'}),
@@ -84,3 +83,13 @@ class FileForm(forms.Form):
         for file in self.files.getlist('file'):
             if file.size > size_limit * 1024 * 1024:
                 raise ValidationError(f'Max allowed file size is {size_limit}Mb')
+
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'form-control comment-area',
+                                             'placeholder': 'Type your comment here'})
+        }

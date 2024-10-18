@@ -6,7 +6,7 @@ from django.utils.timezone import localtime
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
-from .forms import AssignmentForm, FileForm
+from .forms import AssignmentForm, FileForm, CommentForm
 from .models import File, Assignment
 from .templatetags.template_filters import get_filename
 
@@ -61,6 +61,7 @@ class AssignmentInfo(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context['assignment'].subject
+        context['comment_form'] = CommentForm()
         return context
 
     @staticmethod

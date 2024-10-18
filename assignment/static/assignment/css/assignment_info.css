@@ -1,8 +1,12 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+}
+
 .extra-info {
     border-right: 2px solid #f8afff;
     border-bottom: 2px solid #f8afff;
-    width: 100%;
-    margin-left: -8px;
     padding: 10px;
     height: fit-content;
 }
@@ -13,7 +17,8 @@
 }
 
 .general-info {
-    width: 50%;
+    width: auto;
+    max-width: 60%;
     word-break: break-word;
     padding: 20px;
     font-size: 17px;
@@ -53,7 +58,6 @@
     font-size: 30px;
     font-weight: bold;
     border-bottom: 2px solid #f8afff;
-    margin: 0 -8px 0 -8px;
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -88,7 +92,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: -8px;
     background-color: rgba(0, 0, 0, 0.3);
 }
 
@@ -133,11 +136,30 @@
 .comments-section {
     border-left: 2px solid #f8afff;
     border-bottom: 2px solid #f8afff;
-    margin-right: -8px;
     padding: 20px;
-    height: 90%;
+    height: 85%;
 }
 
-.type-comment {
+.comment-area {
+    height: 50px;
+    resize: none;
+    font-size: 12px;
+    margin-top: 8px;
+    width: 98%;
+    scrollbar-width: none;
+}
 
+.send-comment {
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    border: none;
+    background-color: inherit;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
+.send-comment:hover {
+    cursor: pointer;
 }

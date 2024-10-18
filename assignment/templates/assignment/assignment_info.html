@@ -43,8 +43,8 @@
             </button>
         {% endif %}
     </div>
-    <div style="display: flex">
-        <div style="width: 21%">
+    <div style="display: flex; height: 80%">
+        <div style="width: 22%">
             <div class="extra-info">
                 <p class="p-extra"><span style="color: {{ status_color_labels|get_:assignment.status }}">⦿</span> {{ assignment.status }}</p><br><br>
                 <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
@@ -76,8 +76,11 @@
             <div class="comments-section">
 
             </div>
-            <div class="type-comment">
-                
+            <div style="position: relative">
+                {{ comment_form.content }}
+                <button class="send-comment">
+                    <img src="{% static 'assignment/img/send_comment.png' %}" style="width: 15px; height: 15px;">
+                </button>
             </div>
         </div>
 
