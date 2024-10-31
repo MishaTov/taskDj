@@ -121,11 +121,7 @@ class UpdateAssignment(View):
         file_form = FileForm(request.POST, request.FILES)
         if assignment_form.is_valid() and file_form.is_valid():
             with transaction.atomic():
-                updated_data = assignment_form.changed_data
-                for field in updated_data:
-                    field_data = assignment_form.cleaned_data.get(field)
-                    setattr(assignment, field, field_data)
-                assignment.save(update_fields=updated_data)
+                assignment.save(update_fields=assignment_form.changed_data)
                 File.objects.bulk_create([
                     File(file=file, assignment=assignment) for file in file_form.files.getlist('file')
                 ])

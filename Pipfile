@@ -9,6 +9,7 @@ python-decouple = "*"
 psycopg2 = "*"
 channels = "*"
 daphne = "*"
+channels-redis = "*"
 
 [dev-packages]
 
