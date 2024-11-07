@@ -5,6 +5,12 @@ services:
     command: >
       sh -c "python manage.py collectstatic --noinput &&
              daphne -b 0.0.0.0 -p 8000 taskDj.asgi:application"
+    container_name: backend-server
+    develop:
+      watch:
+        - path: ./
+          target: /app/
+          action: sync
     ports:
       - 8000:8000
     environment:
@@ -23,6 +29,7 @@ services:
 
   serve-static:
     image: nginx:latest
+    container_name: static-server
     depends_on:
       - server
     ports:

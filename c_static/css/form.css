@@ -1,0 +1,70 @@
+.form-field-label {
+    font-size: 20px;
+}
+
+.form-field-label.big {
+    font-size: 35px;
+}
+
+.field-required-label {
+    color: #ad0000;
+    font-size: inherit;
+}
+
+.form-control {
+    border: 2px solid rgba(109, 0, 148, 0.5);
+    border-radius: 10px;
+    box-sizing: border-box;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.form-control:focus {
+    box-shadow: 0 0 5px 1px rgb(134, 0, 187, 0.5);
+    outline-width: 0;
+    transition: 0.15s;
+}
+
+.form-control.invalid {
+    box-shadow: none;
+    border: 2px solid #ad0000;
+}
+
+.form-control.wide {
+    width: 100%;
+}
+
+.field-error-msg {
+    color: #ad0000;
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.form-element {
+    border: 2px solid #6d0094;
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+}
+
+.button {
+    width: fit-content;
+    height: fit-content;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    padding: 5px 20px 5px 20px;
+    color: white;
+}
+
+.button:hover {
+    cursor: pointer;
+}
+
+.button.violet {
+    background-color: rgba(109, 0, 148, 0.7);
+}
+
+.button.red {
+    background-color: #ad0000;
+}
