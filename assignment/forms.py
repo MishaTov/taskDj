@@ -93,3 +93,12 @@ class CommentForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'class': 'form-control comment-area',
                                              'placeholder': 'Type your comment here'})
         }
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super().__init__(*args, **kwargs)
+        if not user.is_authenticated:
+            self.fields['content'].widget.attrs.update({
+                'placeholder': 'You must be logged in to post comments',
+                'disabled': True
+            })

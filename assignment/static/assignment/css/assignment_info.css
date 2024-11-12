@@ -24,6 +24,11 @@ html, body {
     font-size: 17px;
 }
 
+.user-link {
+    text-decoration: none;
+    color: #6d0094;
+}
+
 .action-button {
     background-color: inherit;
     width: 100px;
@@ -61,7 +66,6 @@ html, body {
     padding: 20px;
     display: flex;
     justify-content: center;
-    /*text-align: center;*/
     align-items: center;
     word-break: break-word;
     gap: 10px;
@@ -134,10 +138,27 @@ html, body {
 }
 
 .comments-section {
+    display: flex;
+    flex-direction: column;
     border-left: 2px solid #f8afff;
     border-bottom: 2px solid #f8afff;
     padding: 20px;
+    gap: 15px;
     height: 85%;
+    overflow-y: auto;
+}
+
+.comments-section::-webkit-scrollbar-track {
+	background-color: white;
+}
+
+.comments-section::-webkit-scrollbar {
+	width: 7px;
+}
+
+.comments-section::-webkit-scrollbar-thumb {
+	border-radius: 5px;
+	background-color: #fe89ff;
 }
 
 .comment-area {
@@ -162,4 +183,31 @@ html, body {
 
 .send-comment:hover {
     cursor: pointer;
+}
+
+.comment-element {
+    width: 100%;
+}
+
+.comment-author {
+    display: block;
+    padding-left: 10px;
+    font-size: 14px;
+    color: #6d0094;
+}
+
+.comment-content {
+    border: 1px solid #6d0094;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    background-color: #fecbff;
+    word-break: break-word;
+}
+
+.comment-date {
+    display: flex;
+    justify-content: right;
+    font-size: 11px;
+    margin-top: 5px;
 }

@@ -16,8 +16,9 @@
         <div class="delete-assignment-background hidden">
             <div class="delete-assignment-window">
                 <span style="font-size: 20px">Confirm assignment deletion</span>
-                <p style="font-size: 16px">This action will permanently delete the assignment, as well as all files and comments bound with it. You cannot restore this
-                    information in future. <br>
+                <p style="font-size: 16px">
+                    This action will permanently delete the assignment, as well as all files and comments bound with it.
+                    You cannot restore this information in future. <br>
                     Are you sure you want to delete the assignment?</p>
                 <div style="display: flex; justify-content: right; gap: 5px">
                     <form action="{% url 'delete_assignment' assignment.uuid %}" method="post">
@@ -50,7 +51,10 @@
                 <p class="p-extra"><strong>Priority: <span style="color: {{ priority_color_labels|get_:assignment.priority }}">{{ assignment.get_priority_display }}</span></strong> </p>
                 <p class="p-extra"><strong>Due to:</strong> <span class="due-to" value="{{ assignment.deadline|date:'U' }}">{{ assignment.deadline|date:'j F o, G:i' }}</span></p>
                 <p class="p-extra"><strong>Time remaining:</strong> <span class="time-left"></span></p>
-                <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }} {% if assignment.created_by %}<strong>by</strong> <a href="#" style="text-decoration: none; color: #6d0094">{{ assignment.created_by.username }}</a>{% endif %}</p>
+                <p class="p-extra"><strong>Created:</strong> {{ assignment.created_at|date:'j F o, G:i' }}
+                    {% if assignment.created_by %}
+                        <strong>by</strong> <a class="user-link" href="#">{{ assignment.created_by.username }}</a>
+                    {% endif %}</p>
                 <br>
                 <button type="button" class="action-button accept">Accept task</button>
                 <button type="button" class="action-button reject">Reject task</button>
@@ -74,16 +78,25 @@
         </div>
         <div style="width: 15%; margin-left: auto">
             <div class="comments-section">
-
+                {% for comment in assignment.comment_set.all %}
+                    <div class="comment-element">
+                        <div class="comment-author"><a class="user-link" href="#">{{ comment.created_by.username }}</a></div>
+                        <div class="comment-content">
+                            {{ comment.content }}
+                            <span class="comment-date">{{ comment.created_at|date:'j M Y G:i' }}</span>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
             <div style="position: relative">
                 {{ comment_form.content }}
-                <button class="send-comment">
-                    <img src="{% static 'assignment/img/send_comment.png' %}" style="width: 15px; height: 15px;">
-                </button>
+                {% if request.user.is_authenticated %}
+                    <button class="send-comment">
+                        <img src="{% static 'assignment/img/send_comment.png' %}" style="width: 15px; height: 15px;">
+                    </button>
+                {% endif %}
             </div>
         </div>
-
     </div>
 
     <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>

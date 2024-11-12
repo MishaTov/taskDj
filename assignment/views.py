@@ -61,7 +61,7 @@ class AssignmentInfo(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = context['assignment'].subject
-        context['comment_form'] = CommentForm()
+        context['comment_form'] = CommentForm(user=self.request.user)
         return context
 
     @staticmethod
