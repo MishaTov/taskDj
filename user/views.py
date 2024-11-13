@@ -4,9 +4,11 @@ from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
+from django.contrib.auth.views import PasswordResetView as PwdResView
 
 from .auth import hexdigest
 from .forms import AuthForm, CompleteRegistrationForm
+from .models import CustomUser
 
 
 class Login(LoginView):
@@ -65,3 +67,15 @@ class CompleteRegistration(UpdateView):
         email = getattr(self.request.user, 'email', False)
         user = get_object_or_404(self.model, email=email)
         return user
+
+
+class PasswordResetView(PwdResView):
+
+    def form_valid(self, form):
+        try:
+            user = CustomUser.objects.get(email=form.cleaned_data['email'])
+            if user.first_login:
+                form.cleaned_data['email'] = ''
+        except CustomUser.DoesNotExist:
+            pass
+        return super().form_valid(form)

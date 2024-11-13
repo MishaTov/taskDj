@@ -11,6 +11,7 @@ class FirstLoginMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated and not request.user.is_superuser:
             registration_url = reverse_lazy('registration', kwargs={'email_hash': hexdigest(request.user.email)})
-            if request.user.first_login and request.path != registration_url:
+            logout_url = reverse_lazy('logout')
+            if request.user.first_login and request.path not in (registration_url, logout_url):
                 return redirect(registration_url)
         return self.get_response(request)
