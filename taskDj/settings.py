@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'channels',
     'assignment',
-    'user'
+    'user',
+    'template_tags',
 ]
 
 MIDDLEWARE = [
@@ -145,7 +146,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('localhost', 6379)],
+            'hosts': [(config('REDIS_HOST'), config('REDIS_PORT'))],
         },
     },
 }
@@ -160,3 +161,7 @@ EMAIL_USE_TLS = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
+
+CELERY_BROKER_URL = f'redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/0'
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True

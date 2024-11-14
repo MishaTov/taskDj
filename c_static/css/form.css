@@ -1,3 +1,22 @@
+.form-div {
+    display: flex;
+    height: 90vh;
+}
+
+.form-element {
+    width: 20%;
+    min-width: 350px;
+    border: 2px solid #6d0094;
+    border-radius: 15px;
+    padding: 20px;
+    position: relative;
+    margin: auto;
+}
+
+.form-element.wide {
+    width: 50%;
+}
+
 .form-field-label {
     font-size: 20px;
 }
@@ -6,9 +25,20 @@
     font-size: 35px;
 }
 
+.field-required-msg {
+    position: absolute;
+    right: 10px;
+    top: 5px
+}
+
 .field-required-label {
     color: #ad0000;
     font-size: inherit;
+}
+
+.field-required-label.abs {
+    font-size: 20px;
+    position: absolute;
 }
 
 .form-control {
@@ -40,11 +70,26 @@
     margin-top: 5px;
 }
 
-.form-element {
-    border: 2px solid #6d0094;
-    border-radius: 15px;
-    padding: 20px;
-    position: relative;
+/*.form-element {*/
+
+/*}*/
+
+.form-footer-buttons {
+    display: flex;
+    gap: 10px;
+    align-items: center
+}
+
+.form-footer-buttons.right {
+    justify-content: right;
+}
+
+.form-footer-buttons.center {
+    justify-content: center;
+}
+
+.form-footer-buttons.edges {
+    justify-content: space-between;
 }
 
 .button {

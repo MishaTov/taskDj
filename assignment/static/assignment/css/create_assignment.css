@@ -1,46 +1,4 @@
-::-webkit-scrollbar {
-    width: 0;
-}
-
-.required-field-msg {
-    position: absolute;
-    right: 10px;
-    top: 5px
-}
-
-.form-div {
-    margin-top: 75px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.task-form {
-    width: 50%;
-}
-
-#id_subject {
-    height: auto;
-    padding: 5px;
-    font-size: 20px;
-    box-sizing: border-box;
-}
-
-#id_description {
-    height: 300px;
-    min-height: 50px;
-    max-height: 500px;
-    resize: vertical;
-    padding: 5px;
-    font-size: 20px;
-}
-
-#id_deadline {
-    font-size: 15px;
-    height: 25px;
-}
-
-#id_file::-webkit-file-upload-button {
+input[type=file]::-webkit-file-upload-button {
     background-color: rgba(242, 214, 255, 0.5);
     font-size: 15px;
     border: 2px solid rgba(109, 0, 148, 0.5);
@@ -49,14 +7,47 @@
     width: 100px;
 }
 
-#id_workers_limit {
+::-webkit-scrollbar {
+    width: 0;
+}
+
+.form-div.restrict-up {
+    padding-top: 75px;
+}
+
+.form-element.restrict-up {
+    margin: 0 auto auto auto;
+}
+
+.subject {
+    height: auto;
+    padding: 5px;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+.description {
+    height: 100px;
+    min-height: 100px;
+    max-height: 500px;
+    resize: vertical;
+    padding: 5px;
+    font-size: 20px;
+}
+
+.deadline {
+    font-size: 15px;
+    height: 25px;
+}
+
+.workers-limit {
     font-size: 15px;
     height: 25px;
     width: 100px;
     padding: 0;
 }
 
-#id_priority {
+.priority {
     font-size: 15px;
     height: 25px;
     width: 100px;

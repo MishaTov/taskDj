@@ -31,14 +31,9 @@ class AssignmentForm(forms.ModelForm):
         fields = ['subject', 'description', 'deadline', 'workers_limit', 'priority']
         date_widget = {'type': 'datetime-local',
                        'min': (now() + timedelta()).strftime('%Y-%m-%dT%H:%M'),
-                       'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M'),
-                       'class': 'form-control'}
+                       'max': (now() + timedelta(days=5 * 365)).strftime('%Y-%m-%dT%H:%M')}
         widgets = {
-            'subject': forms.TextInput(attrs={'class': 'form-control wide'}),
-            'description': forms.Textarea(attrs={'class': 'form-control wide'}),
             'deadline': forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget),
-            'workers_limit': forms.Select(attrs={'class': 'form-control'}),
-            'priority': forms.Select(attrs={'class': 'form-control'})
         }
         help_texts = {
             'subject': '*'
@@ -58,13 +53,6 @@ class AssignmentForm(forms.ModelForm):
                 'invalid_choice': 'You must provide one of the next variants: Low, Medium, High, Critical'
             }
         }
-
-    def clean(self):
-        super().clean()
-
-        for field_name in self.errors:
-            err_field = self.fields.get(field_name)
-            err_field.widget.attrs['class'] = err_field.widget.attrs['class'] + ' invalid'
 
     def clean_deadline(self):
         deadline = self.cleaned_data.get('deadline')
@@ -90,8 +78,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['content']
         widgets = {
-            'content': forms.Textarea(attrs={'class': 'form-control comment-area',
-                                             'placeholder': 'Type your comment here'})
+            'content': forms.Textarea(attrs={'placeholder': 'Type your comment here'})
         }
 
     def __init__(self, *args, **kwargs):

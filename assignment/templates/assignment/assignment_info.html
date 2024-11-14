@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load template_filters %}
+{% load custom_tags %}
 
 {% block headlinks %}
     {{ block.super }}
@@ -20,7 +20,7 @@
                     This action will permanently delete the assignment, as well as all files and comments bound with it.
                     You cannot restore this information in future. <br>
                     Are you sure you want to delete the assignment?</p>
-                <div style="display: flex; justify-content: right; gap: 5px">
+                <div class="form-footer-buttons right">
                     <form action="{% url 'delete_assignment' assignment.uuid %}" method="post">
                         {% csrf_token %}
                         <button type="submit" class="button delete" style="font-family: Arial">Delete assignment</button>
@@ -89,7 +89,7 @@
                 {% endfor %}
             </div>
             <div style="position: relative">
-                {{ comment_form.content }}
+                {{ comment_form.content|css_class:'form-control comment-area' }}
                 {% if request.user.is_authenticated %}
                     <button class="send-comment">
                         <img src="{% static 'assignment/img/send_comment.png' %}" style="width: 15px; height: 15px;">

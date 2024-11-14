@@ -1,14 +1,9 @@
-import uuid
 from os.path import splitext
 
 from django import template
+from django.forms import BoundField
 
 register = template.Library()
-
-
-@register.filter(name='int_')
-def int_(value):
-    return int(value)
 
 
 @register.filter(name='get_')
@@ -21,3 +16,11 @@ def get_filename(filepath):
     filepath, ext = splitext(str(filepath))
     filename = filepath.split('/')[-1][:-39] + ext
     return filename
+
+
+@register.filter(name='css_class')
+def add_css_class(field: BoundField, css_class: str):
+    css_classes = field.field.widget.attrs.get('class', '')
+    css_classes = ' '.join(css_classes.split() + css_class.split())
+    field.field.widget.attrs['class'] = css_classes
+    return field

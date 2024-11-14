@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load template_filters %}
+{% load custom_tags %}
 
 {% block headlinks %}
     {{ block.super }}
@@ -14,19 +14,48 @@
 {% endblock headlinks %}
 
 {% block content %}
-    <div class="form-div">
-        <form method="post" enctype="multipart/form-data" class="form-element task-form" id="task-form">
-        <span class="required-field-msg">Required fields are marked <span class="field-required-label">*</span></span>
+    <div class="form-div restrict-up">
+        <form method="post" enctype="multipart/form-data" class="form-element wide restrict-up" id="task-form">
+        <span class="field-required-msg">Required fields are marked <span class="field-required-label">*</span></span>
         {% csrf_token %}
-        {% for field in assignment_form %}
-                <span class="form-field-label big">{{ field.label }} <span class="field-required-label" style="font-size: 20px; position: absolute">{{ field.help_text }}</span></span>
-                <div style="margin-bottom: 25px">
-                    {{ field }}
-                    {% if field.errors %}
-                        <p class="field-error-msg">{{ field.errors.0 }}</p>
-                    {% endif %}
-                </div>
-        {% endfor %}
+        <div style="display: flex; flex-direction: column; gap: 25px">
+            <div>
+                <span class="form-field-label big">{{ assignment_form.subject.label }} <span class="field-required-label abs">{{ assignment_form.subject.help_text }}</span></span>
+                <p style="margin-top: 0">{{ assignment_form.subject|css_class:'subject form-control wide' }}</p>
+                {% if assignment_form.subject.errors %}
+                    <p class="field-error-msg">{{ assignment_form.subject.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <span class="form-field-label big">{{ assignment_form.description.label }} <span class="field-required-label abs">{{ assignment_form.description.help_text }}</span></span>
+                <p style="margin-top: 0">{{ assignment_form.description|css_class:'description form-control wide' }}</p>
+                {% if assignment_form.description.errors %}
+                    <p class="field-error-msg">{{ assignment_form.description.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <span class="form-field-label big">{{ assignment_form.deadline.label }} <span class="field-required-label abs">{{ assignment_form.deadline.help_text }}</span></span>
+                <p style="margin-top: 0">{{ assignment_form.deadline|css_class:'deadline form-control' }}</p>
+                {% if assignment_form.deadline.errors %}
+                    <p class="field-error-msg">{{ assignment_form.deadline.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <span class="form-field-label big">{{ assignment_form.workers_limit.label }} <span class="field-required-label abs">{{ assignment_form.workers_limit.help_text }}</span></span>
+                <p style="margin-top: 0">{{ assignment_form.workers_limit|css_class:'workers-limit form-control' }}</p>
+                {% if assignment_form.workers_limit.errors %}
+                    <p class="field-error-msg">{{ assignment_form.workers_limit.errors.0 }}</p>
+                {% endif %}
+            </div>
+            <div>
+                <span class="form-field-label big">{{ assignment_form.priority.label }} <span class="field-required-label abs">{{ assignment_form.priority.help_text }}</span></span>
+                <p style="margin-top: 0">{{ assignment_form.priority|css_class:'priority form-control' }}</p>
+                {% if assignment_form.priority.errors %}
+                    <p class="field-error-msg">{{ assignment_form.priority.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
         <span class="form-field-label">{{ file_form.file.label }}</span>
         <div>
             {{ file_form.file }}
@@ -54,7 +83,7 @@
                 <input type="hidden" name="files-to-delete" id="files-to-delete" value="">
             </div>
         {% endif %}
-            <div style="margin-top: 30px; display: flex; justify-content: center; gap: 10px">
+                <div class="form-footer-buttons center">
                 <button type="submit" class="button violet">
                     {% if request.resolver_match.url_name == 'update_assignment' %}
                         Save changes

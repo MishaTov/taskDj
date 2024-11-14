@@ -1,27 +1,29 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block headlinks %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'user/css/register.css' %}">
 {% endblock headlinks %}
 
 {% block content %}
-    <div class="form-div">
+    <div class="form-div sm">
         <form method="post" class="form-element register-form">
-            <span class="required-field-msg">Required fields are marked <span class="field-required-label">*</span></span>
+            <span class="field-required-msg">Required fields are marked <span class="field-required-label">*</span></span>
             {% csrf_token %}
             {% for field in form %}
                 <span class="form-field-label">{{ field.label }}<span class="field-required-label" style="font-size: 20px; position: absolute">*</span></span>
                 <div style="margin-bottom: 25px">
-                    {{ field }}
+                    {{ field|css_class:'form-control wide' }}
                     {% if field.errors %}
                         <p class="field-error-msg">{{ field.errors.0 }}</p>
                     {% endif %}
                 </div>
             {% endfor %}
-            <div style="display: flex; justify-content: center"><button type="submit" class="button violet">Complete registration</button></div>
+            <div class="form-footer-buttons center">
+                <button type="submit" class="button violet">Complete registration</button>
+            </div>
         </form>
     </div>
 

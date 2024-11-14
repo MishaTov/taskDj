@@ -1,28 +1,26 @@
-
 {% extends 'base.html' %}
 {% load static %}
+{% load custom_tags %}
 
 {% block headlinks %}
     {{ block.super }}
     <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
-    <link type="text/css" rel="stylesheet" href="{% static 'user/css/login.css' %}">
 {% endblock %}
 
 {% block content %}
-
     <div class="form-div">
-        <form method="post" class="form-element login-form">
+        <form method="post" class="form-element">
         {% csrf_token %}
         <div style="margin-bottom: 25px">
             <span class="form-field-label">Username or email</span>
-            <p>{{ form.username }}</p>
+            <p style="margin-top: 8px">{{ form.username|css_class:'form-control wide' }}</p>
             {% if form.username.errors %}
                 <p class="field-error-msg">{{ form.username.errors.0 }}</p>
             {% endif %}
         </div>
         <div>
             <span class="form-field-label">{{ form.password.label }}</span>
-            <p>{{ form.password }}</p>
+            <p style="margin-top: 8px">{{ form.password|css_class:'form-control wide' }}</p>
             {% if form.password.errors %}
                 <p class="field-error-msg">{{ form.password.errors.0 }}</p>
             {% endif %}
@@ -30,7 +28,7 @@
         {% if form.errors %}
             <p class="field-error-msg">{{ form.non_field_errors.0 }}</p>
         {% endif %}
-        <div class="login_buttons">
+        <div class="form-footer-buttons edges">
             <button type="submit" class="button violet">Login</button>
             <a style="text-decoration: none" href="{% url 'password_reset' %}">Forgot password?</a>
         </div>

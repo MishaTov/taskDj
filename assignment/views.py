@@ -6,9 +6,9 @@ from django.utils.timezone import localtime
 from django.views import View
 from django.views.generic import ListView, DetailView, DeleteView
 
+from template_tags.templatetags.custom_tags import get_filename
 from .forms import AssignmentForm, FileForm, CommentForm
 from .models import File, Assignment
-from .templatetags.template_filters import get_filename
 
 
 def main_page(request):
