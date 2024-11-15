@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .auth import generate_registration_email
 from .models import CustomUser
+from .tasks import send_registration_email
 
 
 @admin.register(CustomUser)
@@ -16,13 +17,15 @@ class CustomUserAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         subject, message, html_message = generate_registration_email(request, obj)
-        obj.email_user(
-            subject=subject,
-            message=message,
-            html_message=html_message
-        )
         obj.set_password(obj.password)
         super().save_model(request, obj, form, change)
+        send_registration_email.delay(
+            subject=subject,
+            message=message,
+            html_message=html_message,
+            from_email=None,
+            recipient_list=[obj.email]
+        )
 
 
 admin.register(UserAdmin)

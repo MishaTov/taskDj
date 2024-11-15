@@ -1,13 +1,13 @@
 from django.contrib.auth import login, get_user_model, logout
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import PasswordResetView as PwdResView
 from django.http import HttpResponseNotFound
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
-from django.contrib.auth.views import PasswordResetView as PwdResView
 
 from .auth import hexdigest
-from .forms import AuthForm, CompleteRegistrationForm
+from .forms import AuthForm, CompleteRegistrationForm, PasswordResetForm
 from .models import CustomUser
 
 
@@ -70,6 +70,7 @@ class CompleteRegistration(UpdateView):
 
 
 class PasswordResetView(PwdResView):
+    form_class = PasswordResetForm
 
     def form_valid(self, form):
         try:

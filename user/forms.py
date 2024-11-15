@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm, UsernameField, BaseUserCreationForm
 from django.contrib.auth.forms import PasswordResetForm as PwdResForm
 
-from .tasks import send_reset_email
+from .tasks import send_password_reset_email
 
 
 class AuthForm(AuthenticationForm):
@@ -35,3 +35,11 @@ class CompleteRegistrationForm(BaseUserCreationForm):
         password2_attrs = self.fields.get('password2').widget.attrs
         password1_attrs['required'] = True
         password2_attrs['required'] = True
+
+
+class PasswordResetForm(PwdResForm):
+
+    def send_mail(self, *args, **kwargs):
+        context = args[2]
+        context['user'] = context['user'].pk
+        send_password_reset_email.delay(*args, **kwargs)
