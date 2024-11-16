@@ -104,6 +104,7 @@ class File(models.Model):
 class Comment(models.Model):
     class Meta:
         db_table = 'comments'
+        ordering = ['created_at']
 
     content = models.TextField(max_length=1000)
     created_at = models.DateTimeField(auto_now_add=True)

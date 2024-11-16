@@ -71,7 +71,7 @@ html, body {
     gap: 10px;
 }
 
-.assignment-action-img {
+.assignment-action-icon {
     height: 20px;
     width: 20px;
 }
@@ -190,13 +190,14 @@ html, body {
 }
 
 .comment-author {
-    display: block;
+    display: flex;
+    justify-content: space-between;
     padding-left: 10px;
     font-size: 14px;
     color: #6d0094;
 }
 
-.comment-content {
+.comment-content-element {
     border: 1px solid #6d0094;
     border-radius: 5px;
     padding: 5px;
@@ -205,9 +206,40 @@ html, body {
     word-break: break-word;
 }
 
+.comment-content-element.author {
+    background-color: #fe94ff;
+}
+
+.comment-content {
+    white-space: pre-wrap;
+}
+
+.comment-action-buttons {
+    display: flex;
+    height: 15px;
+    gap: 2px;
+}
+
 .comment-date {
     display: flex;
     justify-content: right;
     font-size: 11px;
     margin-top: 5px;
+}
+
+.comment-button {
+    width: 15px;
+    height: 15px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.comment-button.edit {
+    background-color: white;
+}
+
+.comment-button.delete {
+    background-color: white;
 }

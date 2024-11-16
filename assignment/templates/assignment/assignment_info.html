@@ -37,10 +37,10 @@
         {{ assignment.subject }}
         {% if request.user.username == assignment.created_by.username %}
             <a href="{% url 'update_assignment' assignment.uuid %}" class="assignment-action-button">
-                <img class="assignment-action-img" src="{% static 'assignment/img/edit_assignment.png' %}" alt="Edit assignment">
+                <img class="assignment-action-icon" src="{% static 'assignment/img/edit_assignment.png' %}" alt="Edit assignment">
             </a>
             <button class="assignment-action-button" style="padding: 0" id="delete-assignment">
-                <img class="assignment-action-img" src="{% static 'assignment/img/delete_assignment.png' %}" alt="Delete assignment">
+                <img class="assignment-action-icon" src="{% static 'assignment/img/delete_assignment.png' %}" alt="Delete assignment">
             </button>
         {% endif %}
     </div>
@@ -79,10 +79,22 @@
         <div style="width: 15%; margin-left: auto">
             <div class="comments-section">
                 {% for comment in assignment.comment_set.all %}
-                    <div class="comment-element">
-                        <div class="comment-author"><a class="user-link" href="#">{{ comment.created_by.username }}</a></div>
-                        <div class="comment-content">
-                            {{ comment.content }}
+                    <div class="comment-element" id="comment-{{ comment.uuid }}">
+                        <div class="comment-author">
+                            <a class="user-link" href="#">{{ comment.created_by.username }}</a>
+                            {% if request.user.username == comment.created_by.username%}
+                                <div class="comment-action-buttons hidden">
+                                    <button class="comment-button edit">
+                                        <img class="comment-button" src="{% static 'assignment/img/edit_comment.png' %}" alt="Edit comment">
+                                    </button>
+                                    <button class="comment-button delete">
+                                        <img class="comment-button" src="{% static 'assignment/img/delete_comment.png' %}" alt="Delete comment">
+                                    </button>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="comment-content-element {% if request.user.username == comment.created_by.username %}author{% endif %}">
+                            <span class="comment-content">{{ comment.content }}</span>
                             <span class="comment-date">{{ comment.created_at|date:'j M Y G:i' }}</span>
                         </div>
                     </div>
@@ -99,12 +111,18 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+        const currentUser = '{{ request.user.username }}'
+    </script>
     <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>
-    <script type="text/javascript" src="{% static 'assignment/js/comments.js' %}"></script>
+    <script type="text/javascript" src="{% static 'assignment/js/comments-showing.js' %}"></script>
     {% if assignment.file_set.all %}
         <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
     {% endif %}
     {% if request.user.username == assignment.created_by.username %}
         <script type="text/javascript" src="{% static 'assignment/js/delete_assignment.js' %}"></script>
+    {% endif %}
+    {% if request.user.is_authenticated %}
+        <script type="text/javascript" src="{% static 'assignment/js/comments-actions.js' %}"></script>
     {% endif %}
 {% endblock content %}
