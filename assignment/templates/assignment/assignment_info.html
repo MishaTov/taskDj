@@ -25,7 +25,7 @@
                         {% csrf_token %}
                         <button type="submit" class="button delete" style="font-family: Arial">Delete assignment</button>
                     </form>
-                    <button class="button cancel" id="cancel-assignment-deletion">Cancel</button>
+                    <button type="button" class="button cancel" id="cancel-assignment-deletion">Cancel</button>
                 </div>
             </div>
         </div>
@@ -39,7 +39,7 @@
             <a href="{% url 'update_assignment' assignment.uuid %}" class="assignment-action-button">
                 <img class="assignment-action-icon" src="{% static 'assignment/img/edit_assignment.png' %}" alt="Edit assignment">
             </a>
-            <button class="assignment-action-button" style="padding: 0" id="delete-assignment">
+            <button type="button" class="assignment-action-button" style="padding: 0" id="delete-assignment">
                 <img class="assignment-action-icon" src="{% static 'assignment/img/delete_assignment.png' %}" alt="Delete assignment">
             </button>
         {% endif %}
@@ -81,21 +81,28 @@
                 {% for comment in assignment.comment_set.all %}
                     <div class="comment-element" id="comment-{{ comment.uuid }}">
                         <div class="comment-author">
-                            <a class="user-link" href="#">{{ comment.created_by.username }}</a>
                             {% if request.user.username == comment.created_by.username%}
+                                <span class="user-link comment author">you</span>
                                 <div class="comment-action-buttons hidden">
-                                    <button class="comment-button edit">
+                                    <button type="button" class="comment-button edit">
                                         <img class="comment-button" src="{% static 'assignment/img/edit_comment.png' %}" alt="Edit comment">
                                     </button>
-                                    <button class="comment-button delete">
+                                    <button type="button" class="comment-button delete">
                                         <img class="comment-button" src="{% static 'assignment/img/delete_comment.png' %}" alt="Delete comment">
                                     </button>
                                 </div>
+                            {% else %}
+                                <a class="user-link comment" href="#">{{ comment.created_by.username }}</a>
                             {% endif %}
                         </div>
                         <div class="comment-content-element {% if request.user.username == comment.created_by.username %}author{% endif %}">
                             <span class="comment-content">{{ comment.content }}</span>
-                            <span class="comment-date">{{ comment.created_at|date:'j M Y G:i' }}</span>
+                            <span class="comment-footer">
+                                {% if comment.is_edited %} 
+                                    <span class="comment-edited-label">edited&nbsp;</span> 
+                                {% endif %}
+                                <span class="comment-date">{{ comment.created_at|date:'j M Y G:i' }}</span>
+                            </span>
                         </div>
                     </div>
                 {% endfor %}

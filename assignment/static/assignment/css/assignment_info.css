@@ -29,6 +29,15 @@ html, body {
     color: #6d0094;
 }
 
+.user-link.comment {
+    margin-left: auto;
+}
+
+.user-link.comment.author {
+    margin-left: 0;
+    margin-right: auto;
+}
+
 .action-button {
     background-color: inherit;
     width: 100px;
@@ -191,8 +200,8 @@ html, body {
 
 .comment-author {
     display: flex;
-    justify-content: space-between;
-    padding-left: 10px;
+    align-items: center;
+    padding: 0 10px;
     font-size: 14px;
     color: #6d0094;
 }
@@ -216,11 +225,12 @@ html, body {
 
 .comment-action-buttons {
     display: flex;
+    margin-left: auto;
     height: 15px;
     gap: 2px;
 }
 
-.comment-date {
+.comment-footer {
     display: flex;
     justify-content: right;
     font-size: 11px;

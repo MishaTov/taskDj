@@ -22,10 +22,7 @@ def post_comment(data, user, assignment_uuid):
 
 
 def edit_comment(data):
-    try:
-        comment = Comment.objects.get(uuid=data['uuid'])
-    except Comment.DoesNotExist:
-        return
+    comment = Comment.objects.get(uuid=data['uuid'])
     comment.content = data['content']
     if not comment.is_edited:
         comment.is_edited = True
@@ -37,10 +34,7 @@ def edit_comment(data):
 
 
 def delete_comment(data):
-    try:
-        comment = Comment.objects.get(uuid=data['uuid'])
-    except Comment.DoesNotExist:
-        return
+    comment = Comment.objects.get(uuid=data['uuid'])
     comment.delete()
     return {
         'uuid': data['uuid'],
@@ -72,13 +66,19 @@ class CommentConsumer(WebsocketConsumer):
                 post_comment(text_data, self.scope['user'], self.assignment_uuid)
             )
         elif text_data['event'] == 'comment.edit':
-            data.update(
-                edit_comment(text_data)
-            )
+            try:
+                data.update(
+                    edit_comment(text_data)
+                )
+            except Comment.DoesNotExist:
+                return
         elif text_data['event'] == 'comment.delete':
-            data.update(
-                delete_comment(text_data)
-            )
+            try:
+                data.update(
+                    delete_comment(text_data)
+                )
+            except Comment.DoesNotExist:
+                return
         async_to_sync(self.channel_layer.group_send)(self.room_name, data)
 
     def comment_post(self, event):

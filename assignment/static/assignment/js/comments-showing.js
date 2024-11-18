@@ -5,88 +5,123 @@ const commentsSection = document.querySelector('.comments-section');
 
 commentsSection.scrollTop = commentsSection.scrollHeight;
 
-socket.onmessage = (event) => {
-    const data = JSON.parse(event.data);
-    if (data.event === 'comment.post') {
-        showNewComment(data);
-    } else if (data.event === 'comment.edit') {
-        editCommentElement(data);
-    } else if (data.event === 'comment.delete') {
-        deleteCommentElement(data.uuid);
+
+function createCommentButton(buttonType) {
+    const commentButton = document.createElement('button');
+    commentButton.classList.add('comment-button', buttonType);
+    commentButton.type = 'button';
+
+    const commentIcon = document.createElement('img');
+    commentIcon.classList.add('comment-button');
+    commentIcon.src = `/static/assignment/img/${buttonType}_comment.png`;
+    commentIcon.alt = `${buttonType} comment`;
+
+    commentButton.appendChild(commentIcon);
+    return commentButton;
+}
+
+
+function postCommentElement(comment) {
+    const newCommentElement = document.createElement('div');
+    newCommentElement.classList.add('comment-element');
+    newCommentElement.setAttribute('id', `comment-${comment.uuid}`)
+
+    const newCommentAuthor = document.createElement('div');
+    newCommentAuthor.classList.add('comment-author');
+
+    const newCommentAuthorLink = currentUser === comment.created_by ?
+        document.createElement('span') :
+        document.createElement('a');
+    newCommentAuthorLink.classList.add('user-link', 'comment');
+
+    const newCommentContentElement = document.createElement('div');
+    newCommentContentElement.classList.add('comment-content-element');
+
+    const newCommentContent = document.createElement('span');
+    newCommentContent.classList.add('comment-content');
+    newCommentContent.textContent = comment.content;
+
+    const newCommentFooter = document.createElement('div');
+    newCommentFooter.classList.add('comment-footer');
+
+    const newCommentDate = document.createElement('div');
+    newCommentDate.classList.add('comment-date');
+    newCommentDate.textContent = comment.created_at;
+
+    let newCommentActionButtons;
+
+    if (currentUser === comment.created_by) {
+        newCommentAuthorLink.classList.add('author');
+        newCommentAuthorLink.textContent = 'you';
+
+        newCommentContentElement.classList.add('author');
+
+        newCommentActionButtons = document.createElement('div');
+        newCommentActionButtons.classList.add('comment-action-buttons', 'hidden');
+
+        const newCommentEditButton = createCommentButton('edit');
+        const newCommentDeleteButton = createCommentButton('delete');
+
+        editClickEvent(newCommentEditButton);
+        deleteClickEvent(newCommentDeleteButton);
+
+        newCommentActionButtons.appendChild(newCommentEditButton);
+        newCommentActionButtons.appendChild(newCommentDeleteButton);
+
+        showHideCommentActionButtons(newCommentElement, newCommentActionButtons);
+    } else {
+        newCommentAuthorLink.textContent = comment.created_by;
+        newCommentAuthorLink.href = '#';
+    }
+
+
+    newCommentAuthor.appendChild(newCommentAuthorLink);
+    if (typeof newCommentActionButtons !== 'undefined') {
+        newCommentAuthor.appendChild(newCommentActionButtons);
+    }
+
+    newCommentFooter.appendChild(newCommentDate);
+
+    newCommentContentElement.appendChild(newCommentContent);
+    newCommentContentElement.appendChild(newCommentFooter);
+
+    newCommentElement.appendChild(newCommentAuthor);
+    newCommentElement.appendChild(newCommentContentElement);
+
+    commentsSection.appendChild(newCommentElement);
+
+    if (currentUser === comment.created_by) {
+        commentsSection.scrollTop = commentsSection.scrollHeight;
     }
 }
 
-function showNewComment(comment) {
-    const commentElement = document.createElement('div');
-    const commentAuthor = document.createElement('div');
-    const commentAuthorLink = document.createElement('a');
-    const commentContentElement = document.createElement('div');
-    const commentContent = document.createElement('span');
-    const commentDate = document.createElement('div');
-
-    let commentActionButtons;
-
-    if (currentUser === comment.created_by) {
-        commentActionButtons = document.createElement('div');
-        const editCommentButton = document.createElement('button');
-        const deleteCommentButton = document.createElement('button');
-        const editCommentIcon = document.createElement('img');
-        const deleteCommentIcon = document.createElement('img');
-
-        commentActionButtons.classList.add('comment-action-buttons');
-        editCommentButton.classList.add('comment-button', 'edit');
-        deleteCommentButton.classList.add('comment-button', 'delete');
-        editCommentIcon.classList.add('comment-button');
-        deleteCommentIcon.classList.add('comment-button');
-
-        editCommentIcon.src = '/static/assignment/img/edit_comment.png';
-        editCommentIcon.alt = 'Edit comment';
-        deleteCommentIcon.src = '/static/assignment/img/delete_comment.png';
-        deleteCommentIcon.alt = 'Delete comment';
-
-        editCommentButton.appendChild(editCommentIcon);
-        deleteCommentButton.appendChild(deleteCommentIcon);
-
-        commentActionButtons.appendChild(editCommentButton);
-        commentActionButtons.appendChild(deleteCommentButton);
-    }
-
-    commentElement.classList.add('comment-element');
-    commentAuthor.classList.add('comment-author');
-    commentAuthorLink.classList.add('user-link');
-    commentContentElement.classList.add('comment-content-element');
-    commentContent.classList.add('comment-content');
-    if (currentUser === comment.created_by) {
-        commentContentElement.classList.add('author');
-    }
-    commentDate.classList.add('comment-date');
-
-    commentElement.setAttribute('id', `comment-${comment.uuid}`)
-    commentAuthorLink.textContent = comment.created_by;
-    commentContent.textContent = comment.content;
-    commentDate.textContent = comment.created_at;
-
-    commentAuthor.appendChild(commentAuthorLink);
-    if (typeof commentActionButtons !== 'undefined') {
-        commentAuthor.appendChild(commentActionButtons);
-    }
-    commentContentElement.appendChild(commentContent);
-    commentContentElement.appendChild(commentDate);
-
-    commentElement.appendChild(commentAuthor);
-    commentElement.appendChild(commentContentElement);
-
-    commentsSection.appendChild(commentElement);
-
-    commentsSection.scrollTop = commentsSection.scrollHeight;
-}
 
 function editCommentElement(comment) {
     const commentElement = document.getElementById(`comment-${comment.uuid}`);
     commentElement.querySelector('.comment-content').textContent = comment.content;
+    const isEdited = commentElement.querySelector('.comment-edited-label');
+    if (!isEdited) {
+        const commentEditedLabel = document.createElement('span');
+        commentEditedLabel.classList.add('comment-edited-label');
+        commentEditedLabel.innerHTML = 'edited' + '&nbsp';
+        commentElement.querySelector('.comment-footer').prepend(commentEditedLabel);
+    }
 }
 
-function deleteCommentElement(comment_uuid) {
-    const commentElement = document.getElementById(`comment-${comment_uuid}`);
+
+function deleteCommentElement(comment) {
+    const commentElement = document.getElementById(`comment-${comment.uuid}`);
     commentElement.remove();
+}
+
+
+socket.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    if (data.event === 'comment.post') {
+        postCommentElement(data);
+    } else if (data.event === 'comment.edit') {
+        editCommentElement(data);
+    } else if (data.event === 'comment.delete') {
+        deleteCommentElement(data);
+    }
 }

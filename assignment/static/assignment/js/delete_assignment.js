@@ -4,9 +4,9 @@ const cancelAssignmentDeletionButton = document.getElementById('cancel-assignmen
 
 
 deleteAssignmentButton.addEventListener('click', () => {
-   deleteAssignmentBackground.classList.remove('hidden');
+    deleteAssignmentBackground.classList.remove('hidden');
 });
 
 cancelAssignmentDeletionButton.addEventListener('click', () => {
-   deleteAssignmentBackground.classList.add('hidden');
+    deleteAssignmentBackground.classList.add('hidden');
 });
