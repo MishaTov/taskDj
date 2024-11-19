@@ -12,6 +12,7 @@ channels-redis = "*"
 psycopg2-binary = "*"
 celery = "*"
 redis = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 

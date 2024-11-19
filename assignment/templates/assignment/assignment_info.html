@@ -59,12 +59,12 @@
                 <button type="button" class="action-button accept">Accept task</button>
                 <button type="button" class="action-button reject">Reject task</button>
             </div>
-            {% if assignment.file_set.all %}
+            {% if attachments %}
                 <div class="extra-info">
                     <p><button type="button" class="show-attachments-button" style="width: 100%">Attachments ↓</button></p>
                     <div class="attachments-section hidden">
                         <div style="display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px">
-                            {% for file in assignment.file_set.all %}
+                            {% for file in attachments %}
                                 <a class="file" href="{% url 'download_file' assignment.uuid file.uuid %}">{{ file.file|get_filename }}</a>
                             {% endfor %}
                         </div>
@@ -123,7 +123,7 @@
     </script>
     <script type="text/javascript" src="{% static 'assignment/js/timer.js' %}"></script>
     <script type="text/javascript" src="{% static 'assignment/js/comments-showing.js' %}"></script>
-    {% if assignment.file_set.all %}
+    {% if attachments %}
         <script type="text/javascript" src="{% static 'assignment/js/show_hide_attachments.js' %}"></script>
     {% endif %}
     {% if request.user.username == assignment.created_by.username %}
