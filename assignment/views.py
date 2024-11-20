@@ -20,32 +20,46 @@ class AssignmentView(ListView):
     model = Assignment
     context_object_name = 'assignments'
     paginate_by = 5
+    ordering = ['created_at']
     extra_context = {'title': 'Assignments',
                      'status_color_labels': Assignment.Status.COLOR_LABELS,
                      'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
+    
+    def __init__(self):
+        super().__init__()
+        self.allowed_pagination_options = {'5', '10', '20', '50'}
+        self.allowed_ordering_options = {'created_at', 'deadline', 'priority',
+                                         '-created_at', '-deadline', '-priority'}
 
     def get(self, request: HttpRequest, *args, **kwargs):
         request.GET = request.GET.copy()
         if not request.GET.get('page'):
             request.GET['page'] = 1
         paginate_by = request.GET.get('paginate_by', self.paginate_by)
-        if paginate_by != str(self.paginate_by) and paginate_by in {'5', '10', '20', '50'}:
+        order_by = request.GET.get('order_by', self.ordering)
+        if paginate_by != str(self.paginate_by) and paginate_by in self.allowed_pagination_options:
             self.paginate_by = int(paginate_by)
+        if order_by != self.ordering and order_by in self.allowed_ordering_options:
+            self.ordering = order_by
         request.GET['paginate_by'] = self.paginate_by
+        request.GET['order_by'] = self.ordering
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
+        filters = ''
+        object_list = self.model.get_filtrated_queryset(filters)
+        for param, value in self.request.GET.items():
+            if param != 'page':
+                filters += f'&{param}={value}'
+        context = super().get_context_data(object_list=object_list, **kwargs)
         if not context.get('paginate_by'):
             context['paginate_by'] = self.paginate_by
         paginator = context.get('paginator')
         number = context.get('page_obj').number
         context['pages'] = paginator.get_elided_page_range(number=number, on_each_side=1, on_ends=1)
-        filters = ''
-        for param, value in self.request.GET.items():
-            if param != 'page':
-                filters += f'&{param}={value}'
         context['filters'] = filters
+        context['paginate_options'] = [5, 10, 20, 50]
+        context['sort_options'] = ['Creation date', 'Deadline', 'Priority']
         return context
 
 
@@ -58,11 +72,15 @@ class AssignmentInfo(DetailView):
     extra_context = {'status_color_labels': Assignment.Status.COLOR_LABELS,
                      'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
 
+    def get_queryset(self):
+        return super().get_queryset().select_related('created_by')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.subject
         context['comment_form'] = CommentForm(user=self.request.user)
-        context['attachments'] = self.object.file_set.all()
+        context['attachments'] = self.object.files.all()
+        context['comments'] = self.object.comments.all().select_related('created_by')
         return context
 
     @staticmethod
@@ -112,7 +130,7 @@ class UpdateAssignment(View):
         file_form = FileForm()
         context = {'assignment_form': assignment_form,
                    'file_form': file_form,
-                   'attachments': assignment.file_set.all(),
+                   'attachments': assignment.files.all(),
                    'title': assignment.subject}
         return render(request, 'assignment/create_assignment.html', context=context)
 

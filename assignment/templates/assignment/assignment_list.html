@@ -21,14 +21,27 @@
                         <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
                         {% endif %}
                     </div>
-                    <div style="font-size: 20px; align-self: center">&nbsp;&nbsp;&nbsp;Assignments per page: &nbsp;
-                        <div class="paginate-by-element">
-                        <button class="paginate-button">{{ paginate_by }}</button>
-                            <div class="dropdown-paginate-by">
-                                <span>5</span>
-                                <span>10</span>
-                                <span>20</span>
-                                <span>50</span>
+                    <div style="font-size: 20px; align-self: center">
+                        <div>
+                            Assignments per page: &nbsp;
+                            <div class="dropdown-element">
+                                <button class="dropdown-button">{{ paginate_by }}</button>
+                                <div class="dropdown-list-options">
+                                    {% for option in paginate_options %}
+                                        <span>{{ option }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            Sort by: &nbsp;
+                            <div class="dropdown-element">
+                                <button class="dropdown-button">{{ paginate_by }}</button>
+                                <div class="dropdown-list-options">
+                                    {% for option in sort_options %}
+                                        <span>{{ option }}</span>
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
                     </div>

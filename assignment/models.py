@@ -62,11 +62,11 @@ class Assignment(models.Model):
 
     def remove_files(self, files_uuid: list[str]):
         for file_uuid in files_uuid:
-            file = self.file_set.get(uuid=file_uuid)
+            file = self.files.get(uuid=file_uuid)
             file.delete()
         if not any(os.scandir(self.__uploads_dir)):
             self.delete_uploads_dir()
-        self.file_set.filter(uuid__in=files_uuid).delete()
+        self.files.filter(uuid__in=files_uuid).delete()
 
     def delete(self, using=None, keep_parents=False):
         self.delete_uploads_dir()
@@ -79,6 +79,11 @@ class Assignment(models.Model):
     def delete_uploads_dir(self):
         if self.__uploads_dir:
             rmtree(self.__uploads_dir)
+
+    @classmethod
+    def get_filtrated_queryset(cls, filters):
+        queryset = cls.objects.all()
+        return queryset
 
 
 def get_upload_path(file, filename):
@@ -93,7 +98,7 @@ class File(models.Model):
 
     uuid = models.UUIDField(default=uuid4, unique=True)
     file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
-    assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
+    assignment = models.ForeignKey('Assignment', related_name='files', on_delete=models.CASCADE)
     
     def delete(self, using=None, keep_parents=False):
         filepath = os.path.join(BASE_DIR, os.path.normpath(str(self.file)))
@@ -111,4 +116,4 @@ class Comment(models.Model):
     is_edited = models.BooleanField(default=False)
     uuid = models.UUIDField(default=uuid4, unique=True)
     created_by = models.ForeignKey(AUTH_USER_MODEL, related_name='comments', null=True, on_delete=models.SET_NULL)
-    assignment = models.ForeignKey('Assignment', on_delete=models.CASCADE)
+    assignment = models.ForeignKey('Assignment', related_name='comments', on_delete=models.CASCADE)

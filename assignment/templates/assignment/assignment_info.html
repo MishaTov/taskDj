@@ -78,7 +78,7 @@
         </div>
         <div style="width: 15%; margin-left: auto">
             <div class="comments-section">
-                {% for comment in assignment.comment_set.all %}
+                {% for comment in comments %}
                     <div class="comment-element" id="comment-{{ comment.uuid }}">
                         <div class="comment-author">
                             {% if request.user.username == comment.created_by.username%}
