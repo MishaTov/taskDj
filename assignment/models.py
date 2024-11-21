@@ -1,12 +1,13 @@
+import os
 from os.path import splitext
+from shutil import rmtree
 from uuid import uuid4
 
 from django.db import models
+from django.db.models import Case, When
 from django.urls import reverse
 
 from taskDj.settings import AUTH_USER_MODEL, BASE_DIR
-import os
-from shutil import rmtree
 
 
 class Assignment(models.Model):
@@ -81,8 +82,20 @@ class Assignment(models.Model):
             rmtree(self.__uploads_dir)
 
     @classmethod
-    def get_filtrated_queryset(cls, filters):
-        queryset = cls.objects.all()
+    def get_filtrated_queryset(cls, params):
+        reverse_order = params.get('reverse')
+        ordering = '-' + params.get('order_by') if reverse_order else params.get('order_by')
+        if ordering == 'priority':
+            priority_order = Case(
+                When(priority='C', then=1),
+                When(priority='H', then=2),
+                When(priority='M', then=3),
+                When(priority='L', then=4),
+                output_field=models.IntegerField()
+            )
+            queryset = cls.objects.annotate(priority_order=priority_order).order_by(priority_order)
+        else:
+            queryset = cls.objects.order_by(ordering)
         return queryset
 
 

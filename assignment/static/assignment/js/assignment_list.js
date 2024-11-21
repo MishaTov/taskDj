@@ -1,4 +1,5 @@
 const dropdownElements = document.querySelectorAll('.dropdown-element');
+const orderingButton = document.querySelector('.ordering-button.b');
 
 
 function adjustDropdownElement(dropdownElement) {
@@ -21,12 +22,18 @@ function adjustDropdownElement(dropdownElement) {
     });
 
     dropdownOptions.forEach(element => {
+        let param;
+        if (dropdownElement.classList.contains('pagination')) {
+            param = 'paginate_by';
+        } else if (dropdownElement.classList.contains('ordering')) {
+            param = 'order_by';
+        }
         element.addEventListener('click', (event) => {
             if (event.target.textContent === dropdownButton.textContent) {
                 dropdownListOptions.style.display = 'none';
             } else {
                 const params = new URLSearchParams(window.location.search);
-                params.set('paginate_by', event.target.textContent);
+                params.set(param, event.target.getAttribute('value'));
                 window.location.href = `${window.location.pathname}?${params.toString()}`;
             }
         });
@@ -36,4 +43,16 @@ function adjustDropdownElement(dropdownElement) {
 
 dropdownElements.forEach(element => {
     adjustDropdownElement(element);
+});
+
+orderingButton.addEventListener('click', () => {
+    const params = new URLSearchParams(window.location.search);
+    const value = orderingButton.getAttribute('reverse');
+    if (value === 'False') {
+        params.set('reverse', 'True');
+        window.location.href = `${window.location.pathname}?${params.toString()}`;
+    } else if (value === 'True') {
+        params.delete('reverse');
+        window.location.href = `${window.location.pathname}?${params.toString()}`;
+    }
 });

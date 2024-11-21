@@ -151,10 +151,16 @@
     border-radius: 5px;
     background-color: inherit;
     color: #6d0094;
-    width: 50px;
     font-size: 16px;
     cursor: pointer;
-    padding: 0;
+}
+
+.dropdown-button.pagination {
+    width: 50px;
+}
+
+.dropdown-button.ordering {
+    width: 150px;
 }
 
 .dropdown-list-options {
@@ -163,9 +169,15 @@
     border-radius: 5px;
     position: absolute;
     background-color: white;
-    width: 50px;
-    height: fit-content;
     z-index: 100;
+}
+
+.dropdown-list-options.pagination {
+    width: 50px;
+}
+
+.dropdown-list-options.ordering {
+    width: 150px;
 }
 
 .dropdown-list-options span {
@@ -183,4 +195,18 @@
 .dropdown-element:hover .dropdown-button {
     background-color: #6d0094;
     color: white;
+}
+
+.ordering-button {
+    width: auto;
+    height: auto;
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    font-size: 25px;
+    font-weight: 100;
 }

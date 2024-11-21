@@ -20,16 +20,20 @@ class AssignmentView(ListView):
     model = Assignment
     context_object_name = 'assignments'
     paginate_by = 5
-    ordering = ['created_at']
+    ordering = 'created_at'
     extra_context = {'title': 'Assignments',
                      'status_color_labels': Assignment.Status.COLOR_LABELS,
                      'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
-    
+
     def __init__(self):
         super().__init__()
-        self.allowed_pagination_options = {'5', '10', '20', '50'}
-        self.allowed_ordering_options = {'created_at', 'deadline', 'priority',
-                                         '-created_at', '-deadline', '-priority'}
+        self.allowed_pagination_options = {'5': 5,
+                                           '10': 10,
+                                           '20': 20,
+                                           '50': 50}
+        self.allowed_ordering_options = {'created_at': 'Creation date',
+                                         'deadline': 'Deadline',
+                                         'priority': 'Priority'}
 
     def get(self, request: HttpRequest, *args, **kwargs):
         request.GET = request.GET.copy()
@@ -37,7 +41,7 @@ class AssignmentView(ListView):
             request.GET['page'] = 1
         paginate_by = request.GET.get('paginate_by', self.paginate_by)
         order_by = request.GET.get('order_by', self.ordering)
-        if paginate_by != str(self.paginate_by) and paginate_by in self.allowed_pagination_options:
+        if paginate_by != self.paginate_by and paginate_by in self.allowed_pagination_options:
             self.paginate_by = int(paginate_by)
         if order_by != self.ordering and order_by in self.allowed_ordering_options:
             self.ordering = order_by
@@ -46,20 +50,23 @@ class AssignmentView(ListView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        filters = ''
-        object_list = self.model.get_filtrated_queryset(filters)
-        for param, value in self.request.GET.items():
-            if param != 'page':
-                filters += f'&{param}={value}'
+        object_list = self.model.get_filtrated_queryset(self.request.GET)
         context = super().get_context_data(object_list=object_list, **kwargs)
         if not context.get('paginate_by'):
             context['paginate_by'] = self.paginate_by
+        if not context.get('order_by'):
+            context['order_by'] = self.allowed_ordering_options[self.ordering]
         paginator = context.get('paginator')
         number = context.get('page_obj').number
         context['pages'] = paginator.get_elided_page_range(number=number, on_each_side=1, on_ends=1)
-        context['filters'] = filters
-        context['paginate_options'] = [5, 10, 20, 50]
-        context['sort_options'] = ['Creation date', 'Deadline', 'Priority']
+        context['paginate_options'] = self.allowed_pagination_options
+        context['order_options'] = self.allowed_ordering_options
+        context['reverse'] = True if self.request.GET.get('reverse') else False
+        url_params = ''
+        for param, value in self.request.GET.items():
+            if param != 'page':
+                url_params += f'&{param}={value}'
+        context['url_params'] = url_params
         return context
 
 

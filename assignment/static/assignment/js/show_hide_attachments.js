@@ -10,4 +10,5 @@ showAttachmentsButton.addEventListener('click', () => {
         showAttachmentsButton.textContent = showAttachmentsButton.textContent.replace('↑', '↓');
         attachments.classList.add('hidden');
     }
-})
+});
+

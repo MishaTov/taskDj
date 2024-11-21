@@ -21,28 +21,37 @@
                         <a class="create-assignment-button" href="{% url 'create_assignment' %}" role="button">+ Create assignment</a>
                         {% endif %}
                     </div>
-                    <div style="font-size: 20px; align-self: center">
+                    <div style="display: inline-flex; font-size: 20px; align-self: center; align-items: center; gap: 20px">
                         <div>
-                            Assignments per page: &nbsp;
-                            <div class="dropdown-element">
-                                <button class="dropdown-button">{{ paginate_by }}</button>
-                                <div class="dropdown-list-options">
+                            Assignments per page:
+                            <div class="dropdown-element pagination">
+                                <button class="dropdown-button pagination">{{ paginate_by }}</button>
+                                <div class="dropdown-list-options pagination">
                                     {% for option in paginate_options %}
-                                        <span>{{ option }}</span>
+                                        <span value="{{ option }}">{{ paginate_options|get_:option }}</span>
                                     {% endfor %}
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            Sort by: &nbsp;
-                            <div class="dropdown-element">
-                                <button class="dropdown-button">{{ paginate_by }}</button>
-                                <div class="dropdown-list-options">
-                                    {% for option in sort_options %}
-                                        <span>{{ option }}</span>
-                                    {% endfor %}
+                        <div style="display: flex; align-items: center; gap: 10px">
+                            <div>
+                            Sort by:
+                                <div class="dropdown-element ordering">
+                                    <button class="dropdown-button ordering">{{ order_by }}</button>
+                                    <div class="dropdown-list-options ordering">
+                                        {% for option in order_options %}
+                                            <span value="{{ option }}">{{ order_options|get_:option }}</span>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
+                            <button type="button" class="ordering-button b" reverse="{{ reverse }}">
+                                {% if reverse %}
+                                    ↑
+                                {% else %}
+                                    ↓
+                                {% endif %}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -64,21 +73,21 @@
         {% if paginator.num_pages > 1 %}
             <div class="paginator">
                 {% if page_obj.has_previous %}
-                    <a class="page-pointer" href="?page={{ page_obj.previous_page_number }}{{ filters }}">←</a>
+                    <a class="page-pointer" href="?page={{ page_obj.previous_page_number }}{{ url_params }}">←</a>
                 {% endif %}
                 {% for page_number in pages %}
                     {% if page_number != paginator.ELLIPSIS %}
                          {% if page_number == page_obj.number %}
                              <span class="page current">{{ page_number }}</span>
                          {% else %}
-                             <a class="page" href="?page={{ page_number }}{{ filters }}">{{ page_number }}</a>
+                             <a class="page" href="?page={{ page_number }}{{ url_params }}">{{ page_number }}</a>
                          {% endif %}
                     {% else %}
                         <strong>{{ paginator.ELLIPSIS }}</strong>
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <a class="page-pointer" href="?page={{ page_obj.next_page_number }}{{ filters }}">→</a>
+                    <a class="page-pointer" href="?page={{ page_obj.next_page_number }}{{ url_params }}">→</a>
                 {% endif %}
             </div>
         {% endif %}
