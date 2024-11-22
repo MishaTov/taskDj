@@ -4,15 +4,34 @@
 
 {% block headlinks %}
     {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/form.css' %}">
     <link type="text/css" rel="stylesheet" href="{% static 'assignment/css/assignment_list.css' %}">
 {% endblock headlinks %}
 
 {% block content %}
     <div>
         <div style="display: flex; height: 100%">
-            <div class="filter-section">
+            <form class="filter-section">
                 <strong>Filters</strong>
-            </div>
+                <p class="filter-element">
+                    <strong>{{ filter_form.created_by.label }}:</strong> {{ filter_form.created_by|css_class:'form-control wide smt' }}
+                </p>
+                <p class="filter-element">
+                    <strong>{{ filter_form.deadline_from.label }}:</strong> {{ filter_form.deadline_from|css_class:'form-control wide smt' }}
+                </p>
+                <p class="filter-element">
+                    <strong>{{ filter_form.deadline_to.label }}:</strong> {{ filter_form.deadline_to|css_class:'form-control wide smt' }}
+                </p>
+                <p class="filter-element">
+                    <strong>{{ filter_form.status.label }}:</strong> {{ filter_form.status }}
+                </p>
+                <p class="filter-element">
+                    <strong>{{ filter_form.priority.label }}:</strong> {{ filter_form.priority }}
+                </p>
+                <p class="form-footer-buttons right">
+                    <button type="submit" class="button violet" style="font-size: 12px">Apply</button>
+                </p>
+            </form>
             <div style="padding: 0 20px 0 20px; width: 80%">
                 <div style="display: inline-flex; width: 100%; justify-content: space-between">
                     <div style="display: inline-flex">
@@ -27,8 +46,8 @@
                             <div class="dropdown-element pagination">
                                 <button class="dropdown-button pagination">{{ paginate_by }}</button>
                                 <div class="dropdown-list-options pagination">
-                                    {% for option in paginate_options %}
-                                        <span value="{{ option }}">{{ paginate_options|get_:option }}</span>
+                                    {% for option in pagination_options %}
+                                        <span value="{{ option }}">{{ pagination_options|get_:option }}</span>
                                     {% endfor %}
                                 </div>
                             </div>
@@ -39,8 +58,8 @@
                                 <div class="dropdown-element ordering">
                                     <button class="dropdown-button ordering">{{ order_by }}</button>
                                     <div class="dropdown-list-options ordering">
-                                        {% for option in order_options %}
-                                            <span value="{{ option }}">{{ order_options|get_:option }}</span>
+                                        {% for option in ordering_options %}
+                                            <span value="{{ option }}">{{ ordering_options|get_:option }}</span>
                                         {% endfor %}
                                     </div>
                                 </div>

@@ -83,8 +83,8 @@ class Assignment(models.Model):
 
     @classmethod
     def get_filtrated_queryset(cls, params):
-        reverse_order = params.get('reverse')
-        ordering = '-' + params.get('order_by') if reverse_order else params.get('order_by')
+        reverse_label = '-' if params.get('reverse') else ''
+        ordering = params.get('order_by')
         if ordering == 'priority':
             priority_order = Case(
                 When(priority='C', then=1),
@@ -93,10 +93,8 @@ class Assignment(models.Model):
                 When(priority='L', then=4),
                 output_field=models.IntegerField()
             )
-            queryset = cls.objects.annotate(priority_order=priority_order).order_by(priority_order)
-        else:
-            queryset = cls.objects.order_by(ordering)
-        return queryset
+            return cls.objects.annotate(priority_order=priority_order).order_by(reverse_label + 'priority_order')
+        return cls.objects.order_by(reverse_label + ordering)
 
 
 def get_upload_path(file, filename):

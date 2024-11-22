@@ -64,6 +64,11 @@
     width: 100%;
 }
 
+.form-control.smt {
+    padding: 2px 5px;
+    font-size: 14px;
+}
+
 .field-error-msg {
     color: #ad0000;
     font-size: 18px;
@@ -109,4 +114,32 @@
 
 .button.red {
     background-color: #ad0000;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    background-color: inherit;
+    margin: 0;
+    font: inherit;
+    color: currentColor;
+    width: 0.85em;
+    height: 0.85em;
+    border: 1px solid #6d0094;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="checkbox"]::before {
+    content: "";
+    width: 0.75em;
+    height: 0.75em;
+    transform: scale(0);
+    transition: 120ms transform ease-in-out;
+    box-shadow: inset 1em 1em #6d0094;
+}
+
+input[type="checkbox"]:checked::before {
+    transform: scale(0.5);
 }

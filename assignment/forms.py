@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -89,3 +89,22 @@ class CommentForm(forms.ModelForm):
                 'placeholder': 'You must be logged in to post comments',
                 'disabled': True
             })
+
+
+class FilterForm(forms.Form):
+    date_widget = {'type': 'datetime-local',
+                   'min': datetime(year=2024, month=1, day=1).strftime('%Y-%m-%dT%H:%M'),
+                   'max': (now() + timedelta(days=7 * 365)).strftime('%Y-%m-%dT%H:%M')}
+    status_choices = [
+        ('pending', Assignment.Status.PENDING),
+        ('progress', Assignment.Status.PROGRESS),
+        ('done', Assignment.Status.DONE),
+        ('failed', Assignment.Status.FAILED)
+    ]
+    priority_choices = Assignment.PRIORITY_CHOICES
+
+    created_by = forms.CharField(max_length=30, required=False)
+    deadline_from = forms.DateTimeField(widget=forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget), required=False)
+    deadline_to = forms.DateTimeField(widget=forms.DateInput(format='%d %b %Y %H:%M', attrs=date_widget), required=False)
+    status = forms.MultipleChoiceField(choices=status_choices, widget=forms.CheckboxSelectMultiple, required=False)
+    priority = forms.MultipleChoiceField(choices=priority_choices, widget=forms.CheckboxSelectMultiple, required=False)

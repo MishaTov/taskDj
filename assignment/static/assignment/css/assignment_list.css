@@ -210,3 +210,7 @@
     font-size: 25px;
     font-weight: 100;
 }
+
+.filter-element {
+    margin-bottom: 0;
+}
