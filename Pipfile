@@ -9,10 +9,10 @@ python-decouple = "*"
 channels = "*"
 daphne = "*"
 channels-redis = "*"
-psycopg2-binary = "*"
 celery = "*"
 redis = "*"
 django-debug-toolbar = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 

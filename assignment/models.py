@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 from os.path import splitext
 from shutil import rmtree
 from uuid import uuid4
@@ -6,6 +7,7 @@ from uuid import uuid4
 from django.db import models
 from django.db.models import Case, When
 from django.urls import reverse
+from django.utils.timezone import make_aware
 
 from taskDj.settings import AUTH_USER_MODEL, BASE_DIR
 
@@ -26,13 +28,12 @@ class Assignment(models.Model):
     class Meta:
         db_table = 'assignments'
         ordering = ['-created_at']
-        # ordering = ['deadline']
 
     WORKERS_LIMIT_CHOICES = [(_, _) for _ in range(1, 11)]
-    PRIORITY_CHOICES = {'L': 'Low',
-                        'M': 'Medium',
-                        'H': 'High',
-                        'C': 'Critical'}
+    PRIORITY_CHOICES = [('L', 'Low'),
+                        ('M', 'Medium'),
+                        ('H', 'High'),
+                        ('C', 'Critical')]
 
     PRIORITY_COLOR_LABELS = {'L': '#28b463',
                              'M': '#d4ac0d',
@@ -81,10 +82,8 @@ class Assignment(models.Model):
         if self.__uploads_dir:
             rmtree(self.__uploads_dir)
 
-    @classmethod
-    def get_filtrated_queryset(cls, params):
-        reverse_label = '-' if params.get('reverse') else ''
-        ordering = params.get('order_by')
+    @staticmethod
+    def get_sorted_queryset(queryset, ordering, is_reverse):
         if ordering == 'priority':
             priority_order = Case(
                 When(priority='C', then=1),
@@ -93,8 +92,32 @@ class Assignment(models.Model):
                 When(priority='L', then=4),
                 output_field=models.IntegerField()
             )
-            return cls.objects.annotate(priority_order=priority_order).order_by(reverse_label + 'priority_order')
-        return cls.objects.order_by(reverse_label + ordering)
+            queryset_ = queryset.annotate(priority_order=priority_order).order_by('priority_order')
+        else:
+            queryset_ = queryset.order_by(ordering)
+        return queryset_.reverse() if is_reverse else queryset_
+
+    @classmethod
+    def get_filtrated_queryset(cls, params, ordering):
+        created_by = params.get('created_by')
+        deadline_from = params.get('deadline_from')
+        deadline_to = params.get('deadline_to')
+        status = params.getlist('status')
+        priority = params.getlist('priority')
+        ordering = params.get('ordering', ordering)
+        is_reverse = params.get('reverse')
+        queryset = cls.objects
+        if created_by:
+            queryset = queryset.filter(created_by__username=created_by)
+        if deadline_from:
+            queryset = queryset.filter(deadline__gte=deadline_from)
+        if deadline_to:
+            queryset = queryset.filter(deadline__lte=deadline_to)
+        if status:
+            queryset = queryset.filter(status__in=status)
+        if priority:
+            queryset = queryset.filter(priority__in=priority)
+        return cls.get_sorted_queryset(queryset, ordering, is_reverse)
 
 
 def get_upload_path(file, filename):
@@ -110,7 +133,7 @@ class File(models.Model):
     uuid = models.UUIDField(default=uuid4, unique=True)
     file = models.FileField(upload_to=get_upload_path, max_length=255, blank=True, null=True)
     assignment = models.ForeignKey('Assignment', related_name='files', on_delete=models.CASCADE)
-    
+
     def delete(self, using=None, keep_parents=False):
         filepath = os.path.join(BASE_DIR, os.path.normpath(str(self.file)))
         os.remove(filepath)

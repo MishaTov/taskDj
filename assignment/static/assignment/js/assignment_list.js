@@ -1,5 +1,6 @@
 const dropdownElements = document.querySelectorAll('.dropdown-element');
 const orderingButton = document.querySelector('.ordering-button.b');
+const filtersForm = document.querySelector('.filter-section');
 
 
 function adjustDropdownElement(dropdownElement) {
@@ -55,4 +56,31 @@ orderingButton.addEventListener('click', () => {
         params.delete('reverse');
         window.location.href = `${window.location.pathname}?${params.toString()}`;
     }
+});
+
+
+filtersForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(filtersForm);
+    const filteredData = new URLSearchParams();
+    formData.forEach((value, key) => {
+        if (value.trim()) {
+            filteredData.append(key, value);
+        }
+    });
+    const queryString = filteredData.toString();
+    const action = filtersForm.getAttribute('action') || window.location.pathname;
+    window.location.href = `${action}?${queryString}`;
+});
+
+
+filtersForm.addEventListener('reset', (event) => {
+    const inputElements = filtersForm.querySelectorAll('input');
+    inputElements.forEach(element => {
+        if (element.type === 'checkbox') {
+            element.removeAttribute('checked');
+        } else {
+            element.value = '';
+        }
+    });
 });

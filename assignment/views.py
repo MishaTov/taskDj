@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.http import HttpRequest, FileResponse
+from django.http import FileResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.timezone import localtime
@@ -20,7 +20,7 @@ class AssignmentView(ListView):
     model = Assignment
     context_object_name = 'assignments'
     paginate_by = 5
-    ordering = 'created_at'
+    ordering = '-created_at'
     extra_context = {'title': 'Assignments',
                      'status_color_labels': Assignment.Status.COLOR_LABELS,
                      'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
@@ -34,7 +34,7 @@ class AssignmentView(ListView):
             '50': 50
         }
         self.ordering_options = {
-            'created_at': 'Creation date',
+            '-created_at': 'Creation date',
             'deadline': 'Deadline',
             'priority': 'Priority'
         }
@@ -44,7 +44,7 @@ class AssignmentView(ListView):
         return super().get(request, *args, **kwargs)
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        object_list = self.model.get_filtrated_queryset(self.request.GET)
+        object_list = self.model.get_filtrated_queryset(self.request.GET, self.ordering)
         context = super().get_context_data(object_list=object_list, **kwargs)
         paginator = context.get('paginator')
         current_page_number = context.get('page_obj').number
@@ -55,26 +55,39 @@ class AssignmentView(ListView):
             'pagination_options': self.pagination_options,
             'ordering_options': self.ordering_options,
             'reverse': self.request.GET.get('reverse') == 'True',
-            'url_params': self.build_url_params(),
-            'filter_form': FilterForm(),
+            'filter_form': FilterForm(self.request.GET),
         })
         return context
 
     def process_request_params(self):
+        print(self.paginate_by)
         params = self.request.GET.copy()
-        params.setdefault('page', 1)
-        paginate_by = params.get('paginate_by', self.paginate_by)
+        # paginate_by = params.get('paginate_by', self.paginate_by)
         order_by = params.get('order_by', self.ordering)
-        if paginate_by != self.paginate_by and paginate_by in self.pagination_options:
-            self.paginate_by = int(paginate_by)
+        # if paginate_by != self.paginate_by and paginate_by in self.pagination_options:
+        #     self.calculate_page_number()
+        #     self.paginate_by = int(paginate_by)
         if order_by != self.ordering and order_by in self.ordering_options:
             self.ordering = order_by
         params['paginate_by'] = self.paginate_by
         params['order_by'] = self.ordering
         return params
+    
+    def get_paginate_by(self, queryset):
+        paginate_by = self.request.GET.get('paginate_by', self.paginate_by)
+        if paginate_by != self.paginate_by and paginate_by in self.pagination_options:
+            # self.calculate_page_number()
+            self.paginate_by = paginate_by
+            return int(paginate_by)
 
-    def build_url_params(self):
-        return ''.join(f'&{param}={value}' for param, value in self.request.GET.items() if param != 'page')
+    # def calculate_page_number(self):
+    #     request = self.request.GET.copy()
+    #     paginate_by = int(self.request.GET.get('paginate_by'))
+    #     current_page_number = request.get('page')
+    #     print(self.paginate_by)
+    #     difference = paginate_by / self.paginate_by
+    #     print(difference)
+
 
 
 class AssignmentInfo(DetailView):
@@ -85,9 +98,6 @@ class AssignmentInfo(DetailView):
     slug_field = 'uuid'
     extra_context = {'status_color_labels': Assignment.Status.COLOR_LABELS,
                      'priority_color_labels': Assignment.PRIORITY_COLOR_LABELS}
-
-    def get_queryset(self):
-        return super().get_queryset().select_related('created_by')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

@@ -116,6 +116,13 @@
     background-color: #ad0000;
 }
 
+.button.light {
+    background-color: #e0c1ff;
+    color: #6d0094;
+    border: 1px solid #6d0094;
+    padding: 4px 19px 4px 19px;
+}
+
 input[type="checkbox"] {
     appearance: none;
     background-color: inherit;

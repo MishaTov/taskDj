@@ -96,10 +96,10 @@ class FilterForm(forms.Form):
                    'min': datetime(year=2024, month=1, day=1).strftime('%Y-%m-%dT%H:%M'),
                    'max': (now() + timedelta(days=7 * 365)).strftime('%Y-%m-%dT%H:%M')}
     status_choices = [
-        ('pending', Assignment.Status.PENDING),
-        ('progress', Assignment.Status.PROGRESS),
-        ('done', Assignment.Status.DONE),
-        ('failed', Assignment.Status.FAILED)
+        (Assignment.Status.PENDING, Assignment.Status.PENDING),
+        (Assignment.Status.PROGRESS, Assignment.Status.PROGRESS),
+        (Assignment.Status.DONE, Assignment.Status.DONE),
+        (Assignment.Status.FAILED, Assignment.Status.FAILED)
     ]
     priority_choices = Assignment.PRIORITY_CHOICES
 

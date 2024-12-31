@@ -10,7 +10,8 @@
     color: #6d0094;
     font-size: 16px;
     overflow: hidden;
-    text-overflow: ellipsis
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .file:hover {

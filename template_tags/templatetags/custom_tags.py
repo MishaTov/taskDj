@@ -2,6 +2,7 @@ from os.path import splitext
 
 from django import template
 from django.forms import BoundField
+from django.http import HttpRequest
 
 register = template.Library()
 
@@ -24,3 +25,10 @@ def add_css_class(field: BoundField, css_class: str):
     css_classes = ' '.join(css_classes.split() + css_class.split())
     field.field.widget.attrs['class'] = css_classes
     return field
+
+
+@register.simple_tag
+def replace_url_param(request: HttpRequest, param, value):
+    request = request.GET.copy()
+    request[param] = value
+    return request.urlencode()

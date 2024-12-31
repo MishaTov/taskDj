@@ -13,22 +13,29 @@
         <div style="display: flex; height: 100%">
             <form class="filter-section">
                 <strong>Filters</strong>
-                <p class="filter-element">
-                    <strong>{{ filter_form.created_by.label }}:</strong> {{ filter_form.created_by|css_class:'form-control wide smt' }}
-                </p>
-                <p class="filter-element">
-                    <strong>{{ filter_form.deadline_from.label }}:</strong> {{ filter_form.deadline_from|css_class:'form-control wide smt' }}
-                </p>
-                <p class="filter-element">
-                    <strong>{{ filter_form.deadline_to.label }}:</strong> {{ filter_form.deadline_to|css_class:'form-control wide smt' }}
-                </p>
-                <p class="filter-element">
-                    <strong>{{ filter_form.status.label }}:</strong> {{ filter_form.status }}
-                </p>
-                <p class="filter-element">
-                    <strong>{{ filter_form.priority.label }}:</strong> {{ filter_form.priority }}
-                </p>
+                {% for filter in filter_form %}
+                    <p class="filter-element">
+                        <strong>{{ filter.label }}:</strong> 
+                        {% if filter.html_name != 'status' and filter.html_name != 'priority' %}
+                            {{ filter|css_class:'form-control wide smt' }}
+                        {% else %}
+                            <span style="display: flex; flex-direction: column; gap: 5px;">
+                                {% for choice in filter.field.choices %}
+                                    <span style="display: flex; gap: 5px;">
+                                        <input type="checkbox" 
+                                               name="{{ filter.html_name }}" 
+                                               id="{{ filter.id_for_label }}_{{ forloop.counter0 }}" 
+                                               value="{{ choice.0 }}"
+                                               {% if choice.0 in filter.value %}checked{% endif %}>
+                                        <label for="{{ filter.id_for_label }}_{{ forloop.counter0 }}">{{ choice.1 }}</label>
+                                    </span>
+                                {% endfor %}    
+                            </span>
+                        {% endif %}
+                    </p>
+                {% endfor %}
                 <p class="form-footer-buttons right">
+                    <button type="reset" class="button light" style="font-size: 12px">Clear</button>
                     <button type="submit" class="button violet" style="font-size: 12px">Apply</button>
                 </p>
             </form>
@@ -74,7 +81,6 @@
                         </div>
                     </div>
                 </div>
-                <p style="font-size: 20px">{% if not assignments %} There are no assignments yet. You can create the first one{% endif %}</p>
                 {% for assignment in assignments %}
                     <a class="assignment" href="{% url 'assignment_info' assignment.uuid %}">
                         <strong style="font-size: 25px">{{ assignment.subject }}</strong>
@@ -85,6 +91,8 @@
                             <p style="font-size: 18px; margin: 10px 0 -15px 0"><strong>Time remaining: </strong><span class="time-left"></span></p>
                         {% endif %}
                     </a>
+                {% empty %}
+                    <p style="font-size: 20px">{% if not assignments %} There are no assignments yet. You can create the first one{% endif %}</p>
                 {% endfor %}
             </div>
         </div>
@@ -92,21 +100,21 @@
         {% if paginator.num_pages > 1 %}
             <div class="paginator">
                 {% if page_obj.has_previous %}
-                    <a class="page-pointer" href="?page={{ page_obj.previous_page_number }}{{ url_params }}">←</a>
+                    <a class="page-pointer" href="?{% replace_url_param request 'page' page_obj.previous_page_number %}">←</a>
                 {% endif %}
                 {% for page_number in pages %}
                     {% if page_number != paginator.ELLIPSIS %}
                          {% if page_number == page_obj.number %}
                              <span class="page current">{{ page_number }}</span>
                          {% else %}
-                             <a class="page" href="?page={{ page_number }}{{ url_params }}">{{ page_number }}</a>
+                             <a class="page" href="?{% replace_url_param request 'page' page_number %}">{{ page_number }}</a>
                          {% endif %}
                     {% else %}
                         <strong>{{ paginator.ELLIPSIS }}</strong>
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <a class="page-pointer" href="?page={{ page_obj.next_page_number }}{{ url_params }}">→</a>
+                    <a class="page-pointer" href="?{% replace_url_param request 'page' page_obj.next_page_number %}">→</a>
                 {% endif %}
             </div>
         {% endif %}

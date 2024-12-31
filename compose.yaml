@@ -1,20 +1,20 @@
 services:
+  db:
+    image: postgres:latest
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - ./db-data:/usr/data/db-data
+
   redis:
     image: redis:latest
     container_name: redis
     ports:
       - 6379:6379
-
-  celery:
-    build: .
-    container_name: celery
-    command: celery -A taskDj worker -E -l info
     volumes:
-      - .:/app
-    environment:
-      - DB_HOST=host.docker.internal
-      - CELERY_BROKER_URL=redis://${REDIS_HOST}:${REDIS_PORT}/0
-      - CELERY_TIMEZONE=${CELERY_TIMEZONE}
-      - CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP=${CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP}
-    depends_on:
-      - redis
+      - ./redis-data:/usr/data/redis-data
